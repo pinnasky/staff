@@ -104,8 +104,8 @@
 				    <ul class="list" style="margin-bottom: 0px;">
 				    	<li class="divider">Inbox</li>
 				    	<li><a href="#caselist">Case List</a></li>
-				    	<li><a href="#">Search</a></li>
-				    	<li><a href="#">Calendar</a></li>
+				    	<li ng-show="isAudit == 1"><a href="#">Search</a></li>
+				    	<li ng-show="isAudit == 1"><a href="#">Calendar</a></li>
 				    	<li ng-repeat="menu in menus" ng-class="{divider : menu.IS_ROOT == 1}">
 				    		<a href="#" ng-show="{{menu.IS_ROOT != 1}}">{{menu.MENU_NAME}}</a>
 				    		<span ng-show="{{menu.IS_ROOT == 1}}">{{menu.MENU_NAME}}</span>

@@ -127,7 +127,7 @@ function toggleSideMenu(){
     //if($("#hdnSID").val())
         af.ui.toggleSideMenu();
 }
-var logUsrUid,httpUrl = 'http://222.92.80.83:8034/plugin/edManagement/',logWs;
+var logUsrUid,httpUrl = 'http://222.92.80.83:8034/plugin/edManagement/',logWs,logIsAudit;
 function verifyLogin(){
     $.query("#content,  #header, #navbar").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
@@ -150,6 +150,7 @@ function verifyLogin(){
                 $("#hdnSID").val(data.s);
                 logUsrUid = data.uid;
                 logWs = $("#txtWs").val();
+                logIsAudit = data.isAudit;
                 $.ui.loadContent('caselist',false,true,'flip');
                 $.ui.hideMask();
                 $.query(".afui_panel_mask").remove();
@@ -192,7 +193,6 @@ function loadedLogin(what) {
     $.ui.updateBadge("#tester", $("#af").find("li").length);
     
 }
-var logUsrUid,httpUrl = 'http://222.92.80.83:8034/plugin/edManagement/',logWs;
 function caseList(){
 	$.query(".afui_panel_mask").show();
 	
@@ -234,6 +234,7 @@ function menuList(){
 	  	    scopeNav = angular.element(document.getElementById('caselist_side')).scope();
         	scopeNav.$apply(function() {
 	  	        scopeNav.menus = res;
+	  	        scopeNav.isAudit = logIsAudit;
 	  	    }); 
         	$.query(".afui_panel_mask").hide();
         },
