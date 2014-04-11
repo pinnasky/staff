@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>App Staff Assessment System</title>
+	    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+	    <meta name="apple-mobile-web-app-capable" content="yes" />
+	    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+
+    </head>
+    <body ng-app="staffApp" ng-controller="staffPageInfo">
+        <div id="afui" class="light">
+            <!-- this is the splashscreen you see. -->
+		    <!--<div id="splashscreen" class='ui-loader heavy'>
+		        App Framework
+		        <br>
+		        <br>	<span class='ui-icon ui-icon-loading spin'></span>
+		        <h1>Starting app</h1>
+		    </div>-->
+		    
+		    <div id="content">
+		    	
+		    	<!--login page-->
+			    <div title='Welcome' id="login" class="panel" 
+			     data-load="loadedLogin" 
+			     data-header = "login_header">
+			     	<div style="overflow: auto">
+			            <p id='login_info'>An automated system that provides a Principal console that monitors all staff evaluation forms. These forms are electronic smart forms, that change status when the forms is in progress and again when completed. Each form promotes a professional conversation between the principal and the teacher.</p>
+			            <div style="margin-top: 50px;">
+				            <div style="float:left;text-align: right;">
+					            <img src="icon.png"/>
+							</div>
+							<div style="float:left;width:70%;margin-bottom: 50px;">
+					            <form id="form">
+					                <label for="txtName">User</label>
+					                <input style="width:200px;" type='text' placeholder="Login Name" class='af-ui-forms' id="txtName" value="{{loginname}}">
+					                <br>
+					                <label for="txtPwd">Password</label>
+					                <input style="width:200px;" type='password' placeholder="Password" class='af-ui-forms' id="txtPwd" value="{{password}}">
+					                <br />
+				                	<label>&nbsp;</label>
+					                <div style="overflow: hidden;">
+						                <div style="float: left;padding-top: 5px;">
+						                	<input type="checkbox" name="login_rem" id="login_rem">  
+						                	<label style="font-size: 70%; width: 50%;" for="login_rem">Remember</label>
+						                </div>
+						                <div id="trans-input-ws" style="float: right;">
+							    			<input type='text' placeholder="Workspace" id="txtWs" value="{{ws}}">
+							    		</div>
+					                </div>
+					                <br>
+					                <br>
+					                <input type="button" class="btn btn-primary btn-block" onclick="return verifyLogin();" id="btnLogin" value="Login" style="float:right;">
+				            	</form>
+			            	</div>
+		            	</div>
+		            </div>
+		        </div>
+		        <header id="login_header">
+					<h1>
+		        		Staff Evaluation System
+					</h1>
+				</header>
+			    
+			    <!-- home page case list-->
+			    <div id="caselist" class="panel" 
+			    data-header = "caselist_header"
+			    data-nav = "caselist_side" data-footer = "none"
+			    data-load="caseList">
+					<div>
+			    		<div>
+							<table class="table table-condensed table-hover">
+								<tbody style="font-weight: bold;color:#303030">
+									<tr>
+										<td width="10%" style="cursor: default;">#</td>
+										<td width="30%" style="cursor: default;">Case</td>
+				        				<td width="35%" style="cursor: default;">Process</td>
+				        				<td width="25%" style="cursor: default;">Sent by</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div ng-repeat="case in cases">
+							<table class="table table-condensed table-hover">
+								<tbody style="overflow: hidden;word-break: break-all;">
+									<tr>
+								      	<td width="10%">{{case.APP_NUMBER}}</td>
+										<td width="30%">{{case.APP_TITLE}}</td>
+				        				<td width="35%">{{case.APP_PRO_TITLE}}</td>
+				        				<td width="25%">{{case.APP_DEL_PREVIOUS_USER}}</td>
+								    </tr>
+								</tbody>
+							</table>
+						</div>
+			    	</div>
+				</div>
+				<header id="caselist_header" style="text-align: center;">
+		        	<h1 id="pageTitle" class="">Staff Evaluation System</h1>
+		        	<a onclick='return toggleSideMenu();' class='menuButton'></a>
+		        </header>
+		        <nav id="caselist_side">
+				    <ul class="list" style="margin-bottom: 0px;">
+				    	<li class="divider">Inbox</li>
+				    	<li><a href="#caselist">Case List</a></li>
+				    	<li><a href="#">Search</a></li>
+				    	<li><a href="#">Calendar</a></li>
+				    	<li ng-repeat="menu in menus" ng-class="{divider : menu.IS_ROOT == 1}">
+				    		<a href="#" ng-show="{{menu.IS_ROOT != 1}}">{{menu.MENU_NAME}}</a>
+				    		<span ng-show="{{menu.IS_ROOT == 1}}">{{menu.MENU_NAME}}</span>
+				    	</li>
+					</ul>
+					
+					<!--<ul class="list" ng-repeat="menu_root in menu_roots" style="margin-bottom: 0px;">
+						<li class="divider">{{menu_root.PARENT_MENU_NAME}}</li>
+			    		<li ng-repeat="menu in menus" ng-show="{{menu.PARENT_MENU_ID == menu_root.PARENT_MENU_ID}}">
+			    			<a>{{menu.MENU_NAME}}</a>
+			    		</li>
+					</ul>-->
+				</nav>
+				
+				<!-- School List -->
+		        <div id="schoolList" class="panel" 
+			    data-header = "schoollist_header"
+			    data-nav = "none" data-footer = "schoollist_footer"
+			    data-load="schoolList">
+					<div id="case_content_title">
+			    		<div>
+							<table class="table table-condensed table-hover">
+								<tbody style="font-weight: bold;color:#303030">
+									<tr>
+										<td width="10%" style="cursor: default;">#</td>
+										<td width="30%" style="cursor: default;">Case</td>
+				        				<td width="35%" style="cursor: default;">Process</td>
+				        				<td width="25%" style="cursor: default;">Sent by</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div ng-repeat="case in cases">
+							<table class="table table-condensed table-hover">
+								<tbody style="overflow: hidden;word-break: break-all;">
+									<tr>
+								      	<td width="10%">{{case.APP_NUMBER}}</td>
+										<td width="30%">{{case.APP_TITLE}}</td>
+				        				<td width="35%">{{case.APP_PRO_TITLE}}</td>
+				        				<td width="25%">{{case.APP_DEL_PREVIOUS_USER}}</td>
+								    </tr>
+								</tbody>
+							</table>
+						</div>
+			    	</div>
+				</div>
+				<header id="caselist_header" style="text-align: center;">
+		        	<h1 id="pageTitle" class="">Staff Evaluation System</h1>
+		        	<a onclick='return toggleSideMenu();' class='menuButton'></a>
+		        </header>
+		    </div> <!--content end-->
+		    
+        </div><!--afui end-->
+		<!--<script data-main="js/main.js" src="js/require.js"></script>-->
+		<script type="text/javascript" charset="utf-8" src="js/appframework.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/af.css3animate.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/af.scroller.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/af.touchEvents.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/af.touchLayer.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/appframework.ui.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/angular.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/controllers.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/af.desktopBrowsers.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/main.js"></script>
+
+    </body>
+</html>
