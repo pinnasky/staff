@@ -243,3 +243,33 @@ function menuList(){
         }
     });
 }
+
+function userList(obj){
+	console.log(obj);
+	console.log(obj.getAttribute('cat_id'));
+	$.ui.loadContent('userList',false,true,'flip');
+	//load user list
+	$.query(".afui_panel_mask").show();
+	$.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=userList',
+        data: {w:logWs,u:logUsrUid,SCH_ID:'2',WY_CATEGORY:'NT',SCH_YEAR:'2013-2014',USER_TYPE:'TEACHER'},
+        crossDomain : true,
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+        		console.log(res);
+	  	    scopeUserList = angular.element(document.getElementById('userList')).scope();
+        	scopeUserList.$apply(function() {
+	  	        scopeUserList.users = res;
+	  	        $.ui.loadContent('userList',false,true,'flip');
+	  	    }); 
+        	$.query(".afui_panel_mask").hide();
+        },
+        error:function(){
+        	$.query(".afui_panel_mask").hide();
+        }
+    });
+	
+	
+}

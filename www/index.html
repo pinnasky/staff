@@ -100,6 +100,7 @@
 		        	<h1 id="pageTitle" class="">Staff Evaluation System</h1>
 		        	<a onclick='return toggleSideMenu();' class='menuButton'></a>
 		        </header>
+		        
 		        <nav id="caselist_side">
 				    <ul class="list" style="margin-bottom: 0px;">
 				    	<li class="divider">Inbox</li>
@@ -107,7 +108,7 @@
 				    	<li ng-show="isAudit == 1"><a href="#">Search</a></li>
 				    	<li ng-show="isAudit == 1"><a href="#">Calendar</a></li>
 				    	<li ng-repeat="menu in menus" ng-class="{divider : menu.IS_ROOT == 1}">
-				    		<a href="#" ng-show="{{menu.IS_ROOT != 1}}">{{menu.MENU_NAME}}</a>
+				    		<a href="#" onclick="userList(this)" cat_id="{{menu.WY_CATEGORY}}" ng-show="{{menu.IS_ROOT != 1}}">{{menu.MENU_NAME}}</a>
 				    		<span ng-show="{{menu.IS_ROOT == 1}}">{{menu.MENU_NAME}}</span>
 				    	</li>
 					</ul>
@@ -152,10 +153,22 @@
 						</div>
 			    	</div>
 				</div>
-				<header id="caselist_header" style="text-align: center;">
+				<header id="schoolList_header" style="text-align: center;">
 		        	<h1 id="pageTitle" class="">Staff Evaluation System</h1>
 		        	<a onclick='return toggleSideMenu();' class='menuButton'></a>
 		        </header>
+		        
+		        <!-- user list-->
+		        <div id="userList" class="panel" data-header = "userList_header"
+		        data-nav = "caselist_side" data-footer = "none">
+		        	User List
+		        </div>
+		        <header id="userList_header" style="text-align: center;">
+		        	<a id="backButton" onclick="$.ui.goBack()" class='button'>Back</a>
+                    <h1 id="pageTitle" class="">Custom Header</h1>
+		        	<a onclick='return toggleSideMenu();' class='menuButton'></a>
+		        </header>
+		        
 		    </div> <!--content end-->
 		    
         </div><!--afui end-->
