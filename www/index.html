@@ -161,11 +161,38 @@
 		        <!-- user list-->
 		        <div id="userList" class="panel" data-header = "userList_header"
 		        data-nav = "caselist_side" data-footer = "none">
-		        	User List
+		        	<div>
+			    		<div>
+							<table class="table table-condensed table-hover">
+								<tbody style="font-weight: bold;color:#303030">
+									<tr>
+										<td width="20%" style="cursor: default;">First Name</td>
+										<td width="20%" style="cursor: default;">Last Name</td>
+										<td width="20%" style="cursor: default;">Rating</td>
+				        				<td width="25%" style="cursor: default;">Operator</td>
+				        				<td width="15%" style="cursor: default;">Status</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div ng-repeat="user in users">
+							<table class="table table-condensed table-hover">
+								<tbody style="overflow: hidden;word-break: break-all;">
+									<tr>
+								      	<td width="20%">{{user.USR_FIRSTNAME}}</td>
+								      	<td width="20%">{{user.USR_LASTNAME}}</td>
+										<td width="20%">{{user.STAFF_RATING}}</td>
+				        				<td width="25%">{{user.OPERATOR_NAME}}</td>
+				        				<td width="15%">{{user.WY_TITLE}}</td>
+								    </tr>
+								</tbody>
+							</table>
+						</div>
+			    	</div>
 		        </div>
 		        <header id="userList_header" style="text-align: center;">
 		        	<a id="backButton" onclick="$.ui.goBack()" class='button'>Back</a>
-                    <h1 id="pageTitle" class="">Custom Header</h1>
+                    <h1 id="pageTitle" class="">User List</h1>
 		        	<a onclick='return toggleSideMenu();' class='menuButton'></a>
 		        </header>
 		        
