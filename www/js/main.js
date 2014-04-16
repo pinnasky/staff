@@ -33,7 +33,7 @@ var os = '';
 //requirejs(reqJs,function($,_,angular){
 //  
 //});
-$.ui.splitview=false;
+//$.ui.splitview=false;
 document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
 	document.addEventListener("backbutton", function(){return false;}, false);
@@ -72,27 +72,12 @@ $.ui.ready(function(){
 	caseListScroll.addInfinite();
     caseListScroll.addPullToRefresh();
     caseListScroll.runCB=true;
-//  $.bind(caseListScroll, 'scrollend', function () {
-//      console.log("scroll end");
-//  });
-//
-//  $.bind(caseListScroll, 'scrollstart', function () {
-//      console.log("scroll start");
-//  });
-//  $.bind(caseListScroll,"scroll",function(position){
-//      
-//  })
-//  $.bind(caseListScroll, "refresh-trigger", function () {
-//      console.log("Refresh trigger");
-//  });
     var hideClose;
     $.bind(caseListScroll, "refresh-release", function () {
         var that = this;
-//      console.log("Refresh release");
         caseList();//reload case list
         clearTimeout(hideClose);
         hideClose = setTimeout(function () {
-//          console.log("hiding manually refresh");
             that.hideRefresh();
         }, 1000);
         return false; //tells it to not auto-cancel the refresh
@@ -100,7 +85,6 @@ $.ui.ready(function(){
 
     $.bind(caseListScroll, "refresh-cancel", function () {
         clearTimeout(hideClose);
-//      console.log("cancelled");
     });
     caseListScroll.enable();
     
@@ -123,11 +107,13 @@ $.ui.ready(function(){
 	//caseListScroll end
 });
 
-function toggleSideMenu(){
-    //if($("#hdnSID").val())
-        af.ui.toggleSideMenu();
-}
-var logUsrUid,httpUrl = 'http://222.92.80.83:8034/plugin/edManagement/',logWs,logIsAudit;
+var logUsrUid,httpUrl = 'http://222.92.80.83:8034/plugin/edManagement/',
+logWs,
+logIsAudit,
+logSchId,
+logUserTypes,
+logSchYear
+;
 function verifyLogin(){
     $.query("#content,  #header, #navbar").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
@@ -145,6 +131,7 @@ function verifyLogin(){
         dataType: 'json',
         timeout:5000,
         success: function (data) {
+        	$.ui.enableSideMenu();
             if(data.r === "0"){
                 $("#spName").html(data.n);
                 $("#hdnSID").val(data.s);
@@ -179,6 +166,7 @@ function verifyLogin(){
 }
 function loadedLogin(what) {
     $.ui.handheldMinWidth = 9999;
+    $.ui.disableSideMenu();
     if($("#hdnSID").val()){
         if(what.id == 'login'){
             $("#hdnSID").val("");
@@ -197,6 +185,7 @@ function caseList(){
 	$.query(".afui_panel_mask").show();
 	
 	menuList();
+	userInfo();
 	$.ajax({
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=caseList',
@@ -209,11 +198,8 @@ function caseList(){
         	scope.$apply(function() {
 	  	        scope.cases = res.data;
 	  	    });
-//	  	    scopeNav = angular.element(document.getElementById('caselist_side')).scope();
-//      	scopeNav.$apply(function() {
-//	  	        scopeNav.menus = res.menu.menu;
-//	  	        scopeNav.menu_roots = res.menu.menu_root;
-//	  	    });
+	  	    $.query('#caselist_header_pageTitle').html('Case List ' + '<span class="af-badge" style="position:relative;top:5px;left:1px;background-color:#777;">'+res.totalCount+'</span>');
+	  	    $.ui.scrollToTop('caselist');
         	$.query(".afui_panel_mask").hide();
         },
         error:function(){
@@ -222,11 +208,10 @@ function caseList(){
     });
 }
 function menuList(){
-	$.query(".afui_panel_mask").show();
 	$.ajax({
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=menuList',
-        data: {w:logWs,u:logUsrUid},
+        data: {w:logWs,u:logUsrUid,SCH_ID:'2'},
         crossDomain : true,
         dataType: 'json',
         timeout:5000,
@@ -236,6 +221,32 @@ function menuList(){
 	  	        scopeNav.menus = res;
 	  	        scopeNav.isAudit = logIsAudit;
 	  	    }); 
+        },
+        error:function(){
+        }
+    });
+}
+
+function userList(obj){
+	var wy_cat = obj.getAttribute('wy_cat');
+	var user_type = logUserTypes[wy_cat];
+	//load user list
+	$.query(".afui_panel_mask").show();
+	$.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=userList',
+        data: {w:logWs,u:logUsrUid,SCH_ID:logSchId,WY_CATEGORY:wy_cat,SCH_YEAR:logSchYear,USER_TYPE:user_type},
+        crossDomain : true,
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+	  	    scopeUserList = angular.element(document.getElementById('userList')).scope();
+        	scopeUserList.$apply(function() {
+	  	        scopeUserList.users = res.data;
+	  	        $.ui.loadContent('userList',false,true,'flip');
+				$.ui.scrollToTop('userList');
+	  	        $.query('#userList_pageTitle').html(obj.innerHTML + ' List ' + '<span class="af-badge" style="position:relative;top:5px;left:1px;background-color:#777;">'+res.totalCount+'</span>');
+	  	    }); 
         	$.query(".afui_panel_mask").hide();
         },
         error:function(){
@@ -244,31 +255,20 @@ function menuList(){
     });
 }
 
-function userList(obj){
-	var wy_cat = obj.getAttribute('cat_id');
-	$.ui.loadContent('userList',false,true,'flip');
-	//load user list
-	$.query(".afui_panel_mask").show();
+function userInfo(){
 	$.ajax({
         type: 'post',
-        url: httpUrl+'appDo/ema.php?action=userList',
-        data: {w:logWs,u:logUsrUid,SCH_ID:'2',WY_CATEGORY:wy_cat,SCH_YEAR:'2013-2014',USER_TYPE:'TEACHER'},
+        url: httpUrl+'appDo/ema.php?action=userInfo',
+        data: {w:logWs,u:logUsrUid},
         crossDomain : true,
         dataType: 'json',
         timeout:5000,
         success: function (res) {
-        		console.log(res);
-	  	    scopeUserList = angular.element(document.getElementById('userList')).scope();
-        	scopeUserList.$apply(function() {
-	  	        scopeUserList.users = res.data;
-	  	        $.ui.loadContent('userList',false,true,'flip');
-	  	    }); 
-        	$.query(".afui_panel_mask").hide();
+        	logSchId = res.SCH_IDS;
+        	logUserTypes = res.USER_TYPES;
+        	logSchYear = res.SCH_YEAR;
         },
         error:function(){
-        	$.query(".afui_panel_mask").hide();
         }
     });
-	
-	
 }

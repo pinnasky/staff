@@ -764,5 +764,9 @@ select[multiple].input-sm {
 	width:150px;	
 }
 
-
+#afui .menuButton:hover {
+    border: 1px solid #555555;
+    background-color: #BBBBBB;
+    
+}
 

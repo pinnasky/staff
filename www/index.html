@@ -25,7 +25,9 @@
 		    	<!--login page-->
 			    <div title='Welcome' id="login" class="panel" 
 			     data-load="loadedLogin" 
-			     data-header = "login_header">
+			     data-header = "login_header"
+			     data-nav = "none"
+			     >
 			     	<div style="overflow: auto">
 			            <p id='login_info'>An automated system that provides a Principal console that monitors all staff evaluation forms. These forms are electronic smart forms, that change status when the forms is in progress and again when completed. Each form promotes a professional conversation between the principal and the teacher.</p>
 			            <div style="margin-top: 50px;">
@@ -97,18 +99,18 @@
 			    	</div>
 				</div>
 				<header id="caselist_header" style="text-align: center;">
-		        	<h1 id="pageTitle" class="">Staff Evaluation System</h1>
-		        	<a onclick='return toggleSideMenu();' class='menuButton'></a>
+		        	<h1 id="caselist_header_pageTitle" class="">Staff Evaluation System</h1>
+		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
 		        </header>
 		        
 		        <nav id="caselist_side">
 				    <ul class="list" style="margin-bottom: 0px;">
-				    	<li class="divider">Inbox</li>
+				    	<li class="divider">User Center</li>
 				    	<li><a href="#caselist">Case List</a></li>
 				    	<li ng-show="isAudit == 1"><a href="#">Search</a></li>
 				    	<li ng-show="isAudit == 1"><a href="#">Calendar</a></li>
 				    	<li ng-repeat="menu in menus" ng-class="{divider : menu.IS_ROOT == 1}">
-				    		<a href="#" onclick="userList(this)" cat_id="{{menu.WY_CATEGORY}}" ng-show="{{menu.IS_ROOT != 1}}">{{menu.MENU_NAME}}</a>
+				    		<a href="#" onclick="userList(this)" wy_cat="{{menu.WY_CATEGORY}}" user_type="{{menu.USER_TYPE}}" ng-show="{{menu.IS_ROOT != 1}}">{{menu.MENU_NAME}}</a>
 				    		<span ng-show="{{menu.IS_ROOT == 1}}">{{menu.MENU_NAME}}</span>
 				    	</li>
 					</ul>
@@ -155,7 +157,7 @@
 				</div>
 				<header id="schoolList_header" style="text-align: center;">
 		        	<h1 id="pageTitle" class="">Staff Evaluation System</h1>
-		        	<a onclick='return toggleSideMenu();' class='menuButton'></a>
+		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
 		        </header>
 		        
 		        <!-- user list-->
@@ -191,9 +193,9 @@
 			    	</div>
 		        </div>
 		        <header id="userList_header" style="text-align: center;">
-		        	<a id="backButton" onclick="$.ui.goBack()" class='button'>Back</a>
-                    <h1 id="pageTitle" class="">User List</h1>
-		        	<a onclick='return toggleSideMenu();' class='menuButton'></a>
+		        	<!--<a id="backButton" onclick="$.ui.goBack()" class='button'>Back</a>-->
+                    <h1 id="userList_pageTitle" class="">User List</h1>
+		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
 		        </header>
 		        
 		    </div> <!--content end-->
