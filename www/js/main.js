@@ -112,8 +112,12 @@ logWs,
 logIsAudit,
 logSchId,
 logUserTypes,
-logSchYear
+logSchYear,
+logWyCat,
+logSegment,
+logRatingColor
 ;
+
 function verifyLogin(){
     $.query("#content,  #header, #navbar").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
@@ -190,7 +194,6 @@ function caseList(){
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=caseList',
         data: {w:logWs,u:logUsrUid},
-        crossDomain : true,
         dataType: 'json',
         timeout:5000,
         success: function (res) {
@@ -212,7 +215,6 @@ function menuList(){
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=menuList',
         data: {w:logWs,u:logUsrUid,SCH_ID:'2'},
-        crossDomain : true,
         dataType: 'json',
         timeout:5000,
         success: function (res) {
@@ -228,15 +230,17 @@ function menuList(){
 }
 
 function userList(obj){
+	$("#userListSearch").val('');//clear search area
+	$("#userListSearch").trigger('change');//trigger angular filter to reload data after clear the search area
 	var wy_cat = obj.getAttribute('wy_cat');
-	var user_type = logUserTypes[wy_cat];
+	logWyCat = wy_cat;
 	//load user list
 	$.query(".afui_panel_mask").show();
+	segmentInfo();
 	$.ajax({
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=userList',
-        data: {w:logWs,u:logUsrUid,SCH_ID:logSchId,WY_CATEGORY:wy_cat,SCH_YEAR:logSchYear,USER_TYPE:user_type},
-        crossDomain : true,
+        data: {w:logWs,u:logUsrUid,SCH_ID:logSchId,WY_CATEGORY:wy_cat,SCH_YEAR:logSchYear},
         dataType: 'json',
         timeout:5000,
         success: function (res) {
@@ -260,15 +264,86 @@ function userInfo(){
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=userInfo',
         data: {w:logWs,u:logUsrUid},
-        crossDomain : true,
         dataType: 'json',
         timeout:5000,
         success: function (res) {
         	logSchId = res.SCH_IDS;
         	logUserTypes = res.USER_TYPES;
         	logSchYear = res.SCH_YEAR;
+        	logRatingColor = res.RATING_COLORS;
         },
         error:function(){
         }
     });
+}
+
+function segmentInfo(){
+	$.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=segmentList',
+        data: {w:logWs,WY_CATEGORY:logWyCat},
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+        	logSegment = res;
+        },
+        error:function(){
+        }
+    });
+}
+
+function tagList(obj){
+	var sUsrUid = obj.getAttribute('data-usruid');
+	var iSchId = obj.getAttribute('data-schid');
+	//load user list
+	$.query(".afui_panel_mask").show();
+	$.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=tagList',
+        data: {w:logWs,u:sUsrUid,SCH_ID:iSchId,WY_CATEGORY:logWyCat,SCH_YEAR:logSchYear},
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+        	console.log('tag list');
+        	res.data[0].RATING_COLORS = eval('logRatingColor.'+res.data[0].RATING+'.RAT_COLOR');
+        	logSegment = renderFormTag(res.data[0], logSegment);
+        	console.log(logSegment);
+	  	    scopeTagList = angular.element(document.getElementById('tagList')).scope();
+        	scopeTagList.$apply(function() {
+  	  	        scopeTagList.segments = logSegment;
+  	  	        scopeTagList.tags = res.data[0];
+  	  	        $.ui.loadContent('tagList',false,true,'flip');
+  				$.ui.scrollToTop('tagList');
+//	  	        $.query('#userList_pageTitle').html(obj.innerHTML + ' List ' + '<span class="af-badge" style="position:relative;top:5px;left:1px;background-color:#777;">'+res.totalCount+'</span>');
+	  	    }); 
+        	$.query(".afui_panel_mask").hide();
+        },
+        error:function(){
+        	$.query(".afui_panel_mask").hide();
+        }
+    });
+}
+
+function assignBtn(obj){
+	console.log(obj);
+}
+
+function renderFormTag(record, logSegment) {
+	var test = new Array();
+	for(var i in logSegment){
+		var tags = '';
+		console.log(record);
+		console.log(logSegment[i].SEG_SEM_UID);
+//		console.log(record.3940857724fbdb8d30c9846027312829);
+	    var seg = eval('record.'+logSegment[i].SEG_SEM_UID);
+	    console.log(seg);
+	    var formTags = seg.split(',');    
+	    for(var i=0; i< formTags.length; i++){
+	        var formInfo = formTags[i].split('_');	
+	        tags += formInfo[3];
+	    }
+	    seg.test = tags;
+	    test.push(seg);
+	}
+    return test;
 }
