@@ -188,7 +188,7 @@
 									<tr onclick="tagList(this)" data-usruid = "{{user.USR_UID}}" data-schid = "{{user.SCH_ID}}">
 								      	<td width="20%">{{user.USR_FIRSTNAME}}</td>
 								      	<td width="20%">{{user.USR_LASTNAME}}</td>
-										<td width="20%">{{user.STAFF_RATING}}</td>
+										<td width="20%"><span style="color:#" ng-init = "rat=user.RATING">{{user.STAFF_RATING}}{{ratcolor.{{rat}}.RAT_COLOR}}</span></td>
 				        				<td width="25%" onclick="event.cancelBubble=true;assignBtn(this)">{{user.OPERATOR_NAME}}</td>
 				        				<td width="15%">{{user.WY_TITLE}}</td>
 								    </tr>
@@ -215,7 +215,7 @@
 							<tr ng-repeat="seg in segments">
 								<td rowspan="{{seg.count}}" ng-show="seg.IS_ROOT == 1" style="vertical-align: middle;">{{seg.SEG_SEM_NAME}}</td>
 								<td>{{seg.SEG_NAME}}</td>
-								<td>{{seg.test}}</td>
+								<td><div ng-bind-html="trustHtml(seg.sTag)"></div></td>
 							</tr>
 						</tbody>
 					</table>
@@ -237,6 +237,7 @@
 		<script type="text/javascript" charset="utf-8" src="js/af.touchLayer.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/appframework.ui.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/angular.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/angular-sanitize.min.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/controllers.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/af.desktopBrowsers.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/main.js"></script>

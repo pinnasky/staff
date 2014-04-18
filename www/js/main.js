@@ -1,3 +1,14 @@
+function toArray(elements){
+	var values = [],key;
+    if ($.isArray(elements)){
+    	return elements;
+    } else if ($.isObject(elements)){
+        for (key in elements) {
+        	values[key] = elements[key];
+        }
+    }
+    return values;
+}
 function loadCss(url) {
     var link = document.createElement("link");
     link.type = "text/css";
@@ -244,9 +255,11 @@ function userList(obj){
         dataType: 'json',
         timeout:5000,
         success: function (res) {
+        	console.log(res);
 	  	    scopeUserList = angular.element(document.getElementById('userList')).scope();
         	scopeUserList.$apply(function() {
 	  	        scopeUserList.users = res.data;
+	  	        scopeUserList.ratcolor = logRatingColor;
 	  	        $.ui.loadContent('userList',false,true,'flip');
 				$.ui.scrollToTop('userList');
 	  	        $.query('#userList_pageTitle').html(obj.innerHTML + ' List ' + '<span class="af-badge" style="position:relative;top:5px;left:1px;background-color:#777;">'+res.totalCount+'</span>');
@@ -304,17 +317,15 @@ function tagList(obj){
         dataType: 'json',
         timeout:5000,
         success: function (res) {
-        	console.log('tag list');
         	res.data[0].RATING_COLORS = eval('logRatingColor.'+res.data[0].RATING+'.RAT_COLOR');
-        	logSegment = renderFormTag(res.data[0], logSegment);
-        	console.log(logSegment);
+        	segments = renderFormTag(res.data[0], logSegment);
 	  	    scopeTagList = angular.element(document.getElementById('tagList')).scope();
         	scopeTagList.$apply(function() {
-  	  	        scopeTagList.segments = logSegment;
+  	  	        scopeTagList.segments = segments;
   	  	        scopeTagList.tags = res.data[0];
   	  	        $.ui.loadContent('tagList',false,true,'flip');
   				$.ui.scrollToTop('tagList');
-//	  	        $.query('#userList_pageTitle').html(obj.innerHTML + ' List ' + '<span class="af-badge" style="position:relative;top:5px;left:1px;background-color:#777;">'+res.totalCount+'</span>');
+  	  	        $.query('#tagList_pageTitle').html(res.data[0].USR_FIRSTNAME + ' ' + res.data[0].USR_LASTNAME);
 	  	    }); 
         	$.query(".afui_panel_mask").hide();
         },
@@ -328,22 +339,39 @@ function assignBtn(obj){
 	console.log(obj);
 }
 
-function renderFormTag(record, logSegment) {
-	var test = new Array();
-	for(var i in logSegment){
+function renderFormTag(oRecord, oSegs) {
+	var aRecord = toArray(oRecord);
+	for(var i in oSegs){
 		var tags = '';
-		console.log(record);
-		console.log(logSegment[i].SEG_SEM_UID);
-//		console.log(record.3940857724fbdb8d30c9846027312829);
-	    var seg = eval('record.'+logSegment[i].SEG_SEM_UID);
-	    console.log(seg);
-	    var formTags = seg.split(',');    
-	    for(var i=0; i< formTags.length; i++){
-	        var formInfo = formTags[i].split('_');	
-	        tags += formInfo[3];
-	    }
-	    seg.test = tags;
-	    test.push(seg);
+  		var seg = aRecord[oSegs[i].SEG_SEM_UID];
+  	    var formTags = seg.split(',');    
+  	    for(var j=0; j< formTags.length; j++){
+  	        var formInfo = formTags[j].split('_');
+  	        var fontStyle = 'cursor:pointer;';
+            if(formInfo[1] == 1){
+                fontStyle += 'font-style:italic;';
+            }
+            var color = 	formInfo[0]=='TODO'?'black':(formInfo[0]=='ING'?'green':'red');
+            if(formInfo[0] == 'TODO' && formInfo[1] == 1){
+                color = 'blue';
+            }
+            var delStyle = 'text-decoration: none;';
+            var dataIndex = oSegs[i].SEG_NAME;
+            if( formInfo[2] == 0 || (formInfo[0] == 'TODO' && ((aRecord['RATING'] == 'U' || (aRecord['RATING'] == 'N' && aRecord['IS_NEXTYEAR'] == 1))) && dataIndex != 'TNI' && dataIndex != 'TUS')){
+                delStyle = 'text-decoration: line-through; color: red;';
+            }
+  	        if(formInfo[3]){
+	  	        tags += '<div class="form-tag-div" onlick="caseInfo();" style="'+fontStyle+'">' +
+	  	        '<span style="color:'+color+';font-weight:bold;'+delStyle+'" >' + formInfo[3] + '</span>' +
+	  	        '</div>'
+	  	        ;
+  	        }
+  	    }
+    	oSegs[i].sTag = tags;
 	}
-    return test;
+    return oSegs;
+}
+
+function caseInfo(){
+	
 }
