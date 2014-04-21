@@ -208,8 +208,8 @@
 		        <div id="tagList" class="panel" data-header = "tagList_header"
 		        data-nav = "caselist_side" data-footer = "none">
 		        	<br />
-					<div style="font-weight: bold;float: left;"><span>Rating:</span><span style="color: #{{tags.RATING_COLORS}};">{{tags.STAFF_RATING}}</span></div>
-					<div style="font-weight: bold;float: right;"><span>Operator:</span><span>{{tags.OPERATOR_NAME}}</span></div>
+					<div style="font-weight: bold;float: left;"><span>Rating: </span><span style="color: #{{tags.RATING_COLORS}};">{{tags.STAFF_RATING}}</span></div>
+					<div style="font-weight: bold;float: right;" ng-show="tags.OPERATOR_NAME"><span>Operator: </span><span>{{tags.OPERATOR_NAME}}</span></div>
 					<br /><br />
 					<table class="ema-table ema-table-bordered ema-table-condensed"></tr>
 						<tbody style="font-weight: bold;">
@@ -222,22 +222,23 @@
 					</table>
 		        </div>
 		        <header id="tagList_header" style="text-align: center;">
-		        	<!--<a id="backButton" onclick="$.ui.goBack()" class='button'>Back</a>-->
-                    <h1 id="tagList_pageTitle" class="">User List</h1>
+		        	<span id="tagList_back_btn"></span>
+                    <h1 id="tagList_pageTitle" class="">Form Tags</h1>
 		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
 		        </header>
 		        
 		        <!-- case info -->
-		        <div id="caseInfo" style="padding:0px;" class="panel ED-EDM-panel-default" data-header = "none" data-footer = "none" data-nav = "caselist_side" >
-			        	<div class="ED-EDM-panel-heading">
-			        		<div align="center" style="cursor:move;" id="ext-gen291">
-		        				<span title="" style="color: red;" id="ftDONE_0_1_C_7002620855032af699b95b8070110279_9151592435228cd07bd5cd7067705410___13783624401">Form C: Informal Observation v1.3</span>
-			        		</div>
-			        	</div>
-			        	<div class="ED-EDM-panel-body" style="font-size:13px;background-color:white;"><dl class="ED-EDM-dl-horizontal"><dt>From:</dt><dd>2T</dd><dt>Status:</dt><dd style="color:red">DONE</dd><dt>School Year:</dt><dd>2013-2014</dd><dt>Dependency:</dt><dd style="color: black;">Sequence Dependency</dd><dt>Current User:</dt><dd>Amanda Jarvis</dd><dt>File(.pdf):</dt><dd><div style="font-size:11px;"><a href="../cases/cases_ShowOutputDocument?a=4007990185229c397291405038186786&amp;v=1&amp;ext=pdf&amp;random=42682">KATIE_AGLES_09-06-2013</a><br></div></dd><dt>Update Date:</dt><dd>2013-09-05 08:18:45 PM</dd><dt>Start Date:</dt><dd>2013-09-05 02:27:19 PM</dd></dl></div>
-		        		<!--<div class="ED-EDM-panel-footer"></div>-->
+		        <div id="caseInfo" style="padding:0px;" 
+		        class="panel ED-EDM-panel-default" 
+		        data-header = "none" data-footer = "none" 
+		        data-nav = "caselist_side" >
+		        	<div ng-bind-html="trustHtml(caseInfo)"></div>
 		        </div>
-		        
+		        <header id="caseInfo_header" style="text-align: center;">
+		        	<!--<a id="backButton" onclick="$.ui.goBack()" class='button'>Back</a>-->
+                    <h1 id="caseInfo_pageTitle" class="">Form C: Informal Observation v1.3</h1>
+		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
+		        </header>
 		    </div> <!--content end-->
 		    
         </div><!--afui end-->
