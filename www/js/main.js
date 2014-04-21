@@ -126,7 +126,8 @@ logUserTypes,
 logSchYear,
 logWyCat,
 logSegment,
-logRatingColor
+logRatingColor,
+logNeedUpgrade = 0
 ;
 
 function verifyLogin(){
@@ -214,10 +215,10 @@ function caseList(){
 	  	    });
 	  	    $.query('#caselist_header_pageTitle').html('Case List ' + '<span class="af-badge" style="position:relative;top:5px;left:1px;background-color:#777;">'+res.totalCount+'</span>');
 	  	    $.ui.scrollToTop('caselist');
-        	$.query(".afui_panel_mask").hide();
+        	$.query(".afui_panel_mask").remove();
         },
         error:function(){
-        	$.query(".afui_panel_mask").hide();
+        	$.query(".afui_panel_mask").remove();
         }
     });
 }
@@ -255,7 +256,6 @@ function userList(obj){
         dataType: 'json',
         timeout:5000,
         success: function (res) {
-        	console.log(res);
 	  	    scopeUserList = angular.element(document.getElementById('userList')).scope();
         	scopeUserList.$apply(function() {
 	  	        scopeUserList.users = res.data;
@@ -264,10 +264,10 @@ function userList(obj){
 				$.ui.scrollToTop('userList');
 	  	        $.query('#userList_pageTitle').html(obj.innerHTML + ' List ' + '<span class="af-badge" style="position:relative;top:5px;left:1px;background-color:#777;">'+res.totalCount+'</span>');
 	  	    }); 
-        	$.query(".afui_panel_mask").hide();
+        	$.query(".afui_panel_mask").remove();
         },
         error:function(){
-        	$.query(".afui_panel_mask").hide();
+        	$.query(".afui_panel_mask").remove();
         }
     });
 }
@@ -327,10 +327,10 @@ function tagList(obj){
   				$.ui.scrollToTop('tagList');
   	  	        $.query('#tagList_pageTitle').html(res.data[0].USR_FIRSTNAME + ' ' + res.data[0].USR_LASTNAME);
 	  	    }); 
-        	$.query(".afui_panel_mask").hide();
+        	$.query(".afui_panel_mask").remove();
         },
         error:function(){
-        	$.query(".afui_panel_mask").hide();
+        	$.query(".afui_panel_mask").remove();
         }
     });
 }
@@ -340,6 +340,7 @@ function assignBtn(obj){
 }
 
 function renderFormTag(oRecord, oSegs) {
+	console.log((oRecord));
 	var aRecord = toArray(oRecord);
 	for(var i in oSegs){
 		var tags = '';
@@ -351,7 +352,7 @@ function renderFormTag(oRecord, oSegs) {
             if(formInfo[1] == 1){
                 fontStyle += 'font-style:italic;';
             }
-            var color = 	formInfo[0]=='TODO'?'black':(formInfo[0]=='ING'?'green':'red');
+            var color = formInfo[0]=='TODO'?'black':(formInfo[0]=='ING'?'green':'red');
             if(formInfo[0] == 'TODO' && formInfo[1] == 1){
                 color = 'blue';
             }
@@ -361,8 +362,15 @@ function renderFormTag(oRecord, oSegs) {
                 delStyle = 'text-decoration: line-through; color: red;';
             }
   	        if(formInfo[3]){
-	  	        tags += '<div class="form-tag-div" onlick="caseInfo();" style="'+fontStyle+'">' +
-	  	        '<span style="color:'+color+';font-weight:bold;'+delStyle+'" >' + formInfo[3] + '</span>' +
+	  	        tags += '<div class="form-tag-div" onclick="caseInfo(this);" '+
+	  	        'data-USR_UID="'+aRecord['USR_UID']+'" '+
+	  	        'data-TAG="'+formTags+'" '+
+	  	        'data-HAVE_UPGRADE="'+aRecord['HAVE_UPGRADE']+'" '+
+	  	        'data-WY_UID="'+aRecord['WY_UID']+'" '+
+	  	        'style="'+fontStyle+'">' +
+	  	        '<span style="'+delStyle+'">'+
+	  	        '<span style="color:'+color+';font-weight:bold;" >' + formInfo[3] + '</span>'+
+	  	        '</span>' +
 	  	        '</div>'
 	  	        ;
   	        }
@@ -372,6 +380,48 @@ function renderFormTag(oRecord, oSegs) {
     return oSegs;
 }
 
-function caseInfo(){
+function caseInfo(obj){
+//	$.query("#content,  #header, #navbar").append('<div class="afui_panel_mask"></div>');
+//	$.query(".afui_panel_mask").show();
+	var sUsrUid = obj.getAttribute('data-USR_UID');
+	var iHaveUpgrade = obj.getAttribute('data-HAVE_UPGRADE');
+	var sTag = obj.getAttribute('data-TAG');
+	var sWyUid = obj.getAttribute('data-WY_UID');
 	
+	$.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=getCaseInfo',
+        data: {w:logWs,
+        	USR_UID: sUsrUid,
+            TAG : sTag,
+            TYPE: logWyCat,
+            SCH_YEAR: logSchYear,
+            SCH_ID: logSchId,
+            HAVE_UPGRADE: iHaveUpgrade,
+            NEED_UPGRADE: logNeedUpgrade,
+            WY_UID: sWyUid,
+            CANT_START: 0,
+            USER_ROLE : 'EDMGR_PRINCIPAL'
+        },
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+        	res.data[0].RATING_COLORS = eval('logRatingColor.'+res.data[0].RATING+'.RAT_COLOR');
+        	segments = renderFormTag(res.data[0], logSegment);
+	  	    scopeTagList = angular.element(document.getElementById('tagList')).scope();
+        	scopeTagList.$apply(function() {
+  	  	        scopeTagList.segments = segments;
+  	  	        scopeTagList.tags = res.data[0];
+  	  	        $.ui.loadContent('tagList',false,true,'flip');
+  				$.ui.scrollToTop('tagList');
+  	  	        $.query('#tagList_pageTitle').html(res.data[0].USR_FIRSTNAME + ' ' + res.data[0].USR_LASTNAME);
+	  	    }); 
+        	$.query(".afui_panel_mask").remove();
+        },
+        error:function(){
+        	$.query(".afui_panel_mask").remove();
+        }
+    });
+	
+//	$.ui.loadContent('caseInfo',false,true,'flip');
 }

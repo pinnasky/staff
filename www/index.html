@@ -73,7 +73,7 @@
 			    data-load="caseList">
 					<div>
 			    		<div>
-							<table class="table table-condensed table-hover">
+							<table class="ema-table ema-table-condensed ema-table-hover">
 								<tbody style="font-weight: bold;">
 									<tr>
 										<td width="10%" style="cursor: default;">#</td>
@@ -85,7 +85,7 @@
 							</table>
 						</div>
 						<div ng-repeat="case in cases">
-							<table class="table table-condensed table-hover">
+							<table class="ema-table ema-table-condensed ema-table-hover">
 								<tbody style="overflow: hidden;word-break: break-all;">
 									<tr>
 								      	<td width="10%">{{case.APP_NUMBER}}</td>
@@ -130,7 +130,7 @@
 			    data-load="schoolList">
 					<div id="case_content_title">
 			    		<div>
-							<table class="table table-condensed table-hover">
+							<table class="ema-table ema-table-condensed ema-table-hover">
 								<tbody style="font-weight: bold;color:#303030">
 									<tr>
 										<td width="10%" style="cursor: default;">#</td>
@@ -142,7 +142,7 @@
 							</table>
 						</div>
 						<div ng-repeat="case in cases">
-							<table class="table table-condensed table-hover">
+							<table class="ema-table ema-table-condensed ema-table-hover">
 								<tbody style="overflow: hidden;word-break: break-all;">
 									<tr>
 								      	<td width="10%">{{case.APP_NUMBER}}</td>
@@ -170,7 +170,7 @@
 					<div class="x-clear"></div>
 		        	<div>
 			    		<div>
-							<table class="table table-condensed table-hover">
+							<table class="ema-table ema-table-condensed ema-table-hover">
 								<tbody style="font-weight: bold;">
 									<tr>
 										<td width="20%" style="cursor: default;">First Name</td>
@@ -183,12 +183,13 @@
 							</table>
 						</div>
 						<div ng-repeat="user in users | filter:userListFilte">
-							<table class="table table-condensed table-hover">
+							<table class="ema-table ema-table-condensed ema-table-hover">
 								<tbody style="overflow: hidden;word-break: break-all;">
-									<tr onclick="tagList(this)" data-usruid = "{{user.USR_UID}}" data-schid = "{{user.SCH_ID}}">
+									<tr onclick="tagList(this)" data-usruid = "{{user.USR_UID}}" 
+									data-schid = "{{user.SCH_ID}}" ng-class="{danger:user.RATING == 'N' || user.RATING == 'U'}">
 								      	<td width="20%">{{user.USR_FIRSTNAME}}</td>
 								      	<td width="20%">{{user.USR_LASTNAME}}</td>
-										<td width="20%"><span style="color:#" ng-init = "rat=user.RATING">{{user.STAFF_RATING}}</span></td>
+										<td width="20%"><span style="color:#{{ratcolor[user.RATING].RAT_COLOR}}">{{user.STAFF_RATING}}</span></td>
 				        				<td width="25%" onclick="event.cancelBubble=true;assignBtn(this)">{{user.OPERATOR_NAME}}</td>
 				        				<td width="15%">{{user.WY_TITLE}}</td>
 								    </tr>
@@ -210,7 +211,7 @@
 					<div style="font-weight: bold;float: left;"><span>Rating:</span><span style="color: #{{tags.RATING_COLORS}};">{{tags.STAFF_RATING}}</span></div>
 					<div style="font-weight: bold;float: right;"><span>Operator:</span><span>{{tags.OPERATOR_NAME}}</span></div>
 					<br /><br />
-					<table class="table table-bordered table-condensed"></tr>
+					<table class="ema-table ema-table-bordered ema-table-condensed"></tr>
 						<tbody style="font-weight: bold;">
 							<tr ng-repeat="seg in segments">
 								<td rowspan="{{seg.count}}" ng-show="seg.IS_ROOT == 1" style="vertical-align: middle;">{{seg.SEG_SEM_NAME}}</td>
@@ -225,6 +226,17 @@
                     <h1 id="tagList_pageTitle" class="">User List</h1>
 		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
 		        </header>
+		        
+		        <!-- case info -->
+		        <div id="caseInfo" style="padding:0px;" class="panel ED-EDM-panel-default" data-header = "none" data-footer = "none" data-nav = "caselist_side" >
+			        	<div class="ED-EDM-panel-heading">
+			        		<div align="center" style="cursor:move;" id="ext-gen291">
+		        				<span title="" style="color: red;" id="ftDONE_0_1_C_7002620855032af699b95b8070110279_9151592435228cd07bd5cd7067705410___13783624401">Form C: Informal Observation v1.3</span>
+			        		</div>
+			        	</div>
+			        	<div class="ED-EDM-panel-body" style="font-size:13px;background-color:white;"><dl class="ED-EDM-dl-horizontal"><dt>From:</dt><dd>2T</dd><dt>Status:</dt><dd style="color:red">DONE</dd><dt>School Year:</dt><dd>2013-2014</dd><dt>Dependency:</dt><dd style="color: black;">Sequence Dependency</dd><dt>Current User:</dt><dd>Amanda Jarvis</dd><dt>File(.pdf):</dt><dd><div style="font-size:11px;"><a href="../cases/cases_ShowOutputDocument?a=4007990185229c397291405038186786&amp;v=1&amp;ext=pdf&amp;random=42682">KATIE_AGLES_09-06-2013</a><br></div></dd><dt>Update Date:</dt><dd>2013-09-05 08:18:45 PM</dd><dt>Start Date:</dt><dd>2013-09-05 02:27:19 PM</dd></dl></div>
+		        		<!--<div class="ED-EDM-panel-footer"></div>-->
+		        </div>
 		        
 		    </div> <!--content end-->
 		    
