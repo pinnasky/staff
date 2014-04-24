@@ -58,14 +58,13 @@ var os = '';
 //});
 //$.ui.splitview=false;
 document.addEventListener("deviceready", onDeviceReady, false);
+$("#txtPwd").keypress(function( event ) {
+    if ( event.which === 13 ) {
+        $( "#btnLogin").click();
+    }
+});
 function onDeviceReady() {
     document.addEventListener("backbutton", function(){return false;}, false);
-    
-    $( "#txtPwd" ).keypress(function( event ) {
-        if ( event.which === 13 ) {
-            $( "#btnLogin").click();
-        }
-    });
     if($.os.android)
         os='android';
     else if($.os.blackberry)
@@ -83,8 +82,7 @@ function onDeviceReady() {
     $.ui.autoLaunch = false;
     $.ui.openLinksNewTab = false;
     $(document).ready(function(){
-    $.ui.launch();//portrait landscape
-        
+    	$.ui.launch();//portrait landscape
     });
 }
 
@@ -178,6 +176,7 @@ function verifyLogin(){
                 }else
                     localStorage.setItem("login_rem", false);
             }else{
+            	$.ui.disableSideMenu();
                 if(data.m)
                     $.ui.showMask(data.m);
                 else
@@ -193,6 +192,7 @@ function verifyLogin(){
     });
     return false;
 }
+
 function loadedLogin(what) {
     $.ui.handheldMinWidth = 9999;
     $.ui.disableSideMenu();
@@ -210,6 +210,7 @@ function loadedLogin(what) {
     $.ui.updateBadge("#tester", $("#af").find("li").length);
     
 }
+
 function caseList(){
     $.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
@@ -236,6 +237,7 @@ function caseList(){
         }
     });
 }
+
 function menuList(){
     $.ajax({
         type: 'post',
@@ -256,19 +258,28 @@ function menuList(){
 }
 
 function userList(obj){
-    //load user list
-    $.query("#afui").append('<div class="afui_panel_mask"></div>');
-    $.query(".afui_panel_mask").show();
-    $("#userListSearch").val('');//clear search area
-    $("#userListSearch").trigger('change');//trigger angular filter to reload data after clear the search area
     var wy_cat = obj.getAttribute('wy_cat');
     logWyCat = wy_cat;
     segmentInfo();
     currentRole();
-    $.ajax({
+    if(logIsAudit == 1){
+    	$("#userListSearch").val('');//clear search area
+    	$("#userListSearch").trigger('change');//trigger angular filter to reload data after clear the search area
+    	document.getElementById('userListSearch').blur();
+    	userListAjax(obj);
+    }else{
+    	userTags();
+    }
+}
+
+function userListAjax(obj){
+	//load user list
+	$.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+	$.ajax({
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=userList',
-        data: {w:logWs,u:logUsrUid,SCH_ID:logSchId,WY_CATEGORY:wy_cat,SCH_YEAR:logSchYear},
+        data: {w:logWs,u:logUsrUid,SCH_ID:logSchId,WY_CATEGORY:logWyCat,SCH_YEAR:logSchYear},
         dataType: 'json',
         timeout:5000,
         success: function (res) {
@@ -279,6 +290,35 @@ function userList(obj){
                 $.ui.loadContent('userList',false,true,'flip');
                 $.ui.scrollToTop('userList');
                 $.query('#userList_pageTitle').html(obj.innerHTML + ' List ' + '<span class="af-badge" style="position:relative;top:5px;left:1px;background-color:#777;">'+res.totalCount+'</span>');
+            }); 
+            $.query(".afui_panel_mask").remove();
+        },
+        error:function(){
+            $.query(".afui_panel_mask").remove();
+        }
+    });
+}
+
+function userTags(){
+	//load tag list for one user
+	$.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+    $.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=tagList',
+        data: {w:logWs,USR_UID:logUsrUid,SCH_ID:logSchId,WY_CATEGORY:logWyCat,SCH_YEAR:logSchYear},
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+            res.data[0].RATING_COLORS = eval('logRatingColor.'+res.data[0].RATING+'.RAT_COLOR');
+            segments = renderFormTag(res.data[0], logSegment);
+            scopeTagList = angular.element(document.getElementById('tagList')).scope();
+            scopeTagList.$apply(function() {
+                scopeTagList.segments = segments;
+                scopeTagList.tags = res.data[0];
+                $.ui.loadContent('userTags',false,true,'flip');
+                $.ui.scrollToTop('userTags');
+                $.query('#userTags_pageTitle').html(res.data[0].USR_FIRSTNAME + ' ' + res.data[0].USR_LASTNAME);
             }); 
             $.query(".afui_panel_mask").remove();
         },
@@ -471,7 +511,7 @@ function caseInfo(obj){
 function showCaseInfo(result,sFormInfo,sTag,iHaveUpgrade,sUsrUid,sWyUid,sOperatorUid){
     //build form name
     var aTag = sFormInfo.split('_');
-    var extraMark = '',startCase = '',formNameStyle = '';
+    var extraMark = '',startCase = '',formNameStyle = '',backBtn = '';
     var color = 'black';
     var isOnGoing = result.CASE_INFO.STATUS.indexOf('ONGOING') !== -1 ? 1 : 0;
     var showAbandon = false;//v1.9.4
@@ -512,8 +552,12 @@ function showCaseInfo(result,sFormInfo,sTag,iHaveUpgrade,sUsrUid,sWyUid,sOperato
         startCase = '<button class="ED-EDM-btn ED-EDM-btn-primary ED-EDM-btn-xs">Start Case</button>';
     if(aTag[2] == 0)
         formNameStyle = 'text-decoration: line-through;color: red;';
+    if(logIsAudit == 1)
+    	backBtn = 'tagListAjax(\''+sUsrUid+'\',\''+logSchId+'\');';
+    else
+    	backBtn = 'userTags();';
     var header = '<div class="ED-EDM-panel-heading">'+
-                    '   <a style="color: #53575E;" id="backButton" onclick="tagListAjax(\''+sUsrUid+'\',\''+logSchId+'\');" class="button">Back</a>'+
+                    '   <a style="color: #53575E;height:34px;" id="backButton" onclick="'+backBtn+'" class="button">Back</a>'+
                     '   <div align="center" style="'+formNameStyle+'">'+
                     '       <span title="" style="color: '+color+';" id="ft'+sFormInfo+'">'+result.CASE_INFO.FORM_NAME+'</span> '+
                     extraMark +
@@ -606,4 +650,7 @@ function showCaseInfo(result,sFormInfo,sTag,iHaveUpgrade,sUsrUid,sWyUid,sOperato
         $.ui.loadContent('caseInfo',false,true,'flip');
         $.ui.scrollToTop('caseInfo');
     });
+}
+function changeEvaluator(obj, usrUid, createdDate, wyUid, haveUpgrade, evaUid, tag){
+	
 }

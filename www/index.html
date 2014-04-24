@@ -102,7 +102,7 @@
 		        	<h1 id="caselist_header_pageTitle" class="">Staff Evaluation System</h1>
 		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
 		        </header>
-		        
+		        <!-- side bar -->
 		        <nav id="caselist_side">
 				    <ul class="list" style="margin-bottom: 0px;">
 				    	<li class="divider">User Center</li>
@@ -165,7 +165,7 @@
 		        data-nav = "caselist_side" data-footer = "none">
 		        	<br />
 					<div style="width: 75%;">
-						<input id="userListSearch" class="input-sm" ng-model="userListSearch" style="width:50%;" type="search" placeholder="Please input first name or last name ">
+						<input id="userListSearch" style="width:70%;" class="input-sm" ng-model="userListSearch" type="search" placeholder="Please input first name or last name ">
 					</div>
 					<div class="x-clear"></div>
 		        	<div>
@@ -204,6 +204,55 @@
 		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
 		        </header>
 		        
+		        <!-- user tags -->
+		        <div id="userTags" class="panel" data-header = "userTags_header"
+		        data-nav = "caselist_side" data-footer = "none">
+		        	<div>
+			    		<div>
+							<table class="ema-table ema-table-condensed ema-table-hover">
+								<tbody style="font-weight: bold;">
+									<tr>
+										<td width="20%" style="cursor: default;">First Name</td>
+										<td width="20%" style="cursor: default;">Last Name</td>
+										<td width="20%" style="cursor: default;">Rating</td>
+				        				<td width="25%" style="cursor: default;">Operator</td>
+				        				<td width="15%" style="cursor: default;">Status</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<table class="ema-table ema-table-condensed ema-table-hover">
+								<tbody style="overflow: hidden;word-break: break-all;">
+									<tr ng-class="{danger:tags.RATING == 'N' || tags.RATING == 'U'}">
+								      	<td width="20%">{{tags.USR_FIRSTNAME}}</td>
+								      	<td width="20%">{{tags.USR_LASTNAME}}</td>
+										<td width="20%"><span style="color:#{{tags.RATING_COLORS}}">{{tags.STAFF_RATING}}</span></td>
+				        				<td width="25%">{{tags.OPERATOR_NAME}}</td>
+				        				<td width="15%">{{tags.WY_TITLE}}</td>
+								    </tr>
+								</tbody>
+							</table>
+						</div>
+			    	</div>
+			    	<div>
+			    		<br /><br />
+						<table class="ema-table ema-table-bordered ema-table-condensed"></tr>
+							<tbody style="font-weight: bold;">
+								<tr ng-repeat="seg in segments">
+									<td rowspan="{{seg.count}}" ng-show="seg.IS_ROOT == 1" style="vertical-align: middle;">{{seg.SEG_SEM_NAME}}</td>
+									<td>{{seg.SEG_NAME}}</td>
+									<td><div ng-bind-html="trustHtml(seg.sTag)"></div></td>
+								</tr>
+							</tbody>
+						</table>
+			    	</div>
+		        </div>
+		        <header id="userTags_header" style="text-align: center;">
+                    <h1 id="userTags_pageTitle" class="">User List</h1>
+		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
+		        </header>
+		        
 		        <!-- Form Tag List -->
 		        <div id="tagList" class="panel" data-header = "tagList_header"
 		        data-nav = "caselist_side" data-footer = "none">
@@ -239,6 +288,10 @@
                     <h1 id="caseInfo_pageTitle" class="">Form C: Informal Observation v1.3</h1>
 		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
 		        </header>
+		        
+		        <!-- Evaluator List-->
+		        
+		        
 		    </div> <!--content end-->
 		    
         </div><!--afui end-->
