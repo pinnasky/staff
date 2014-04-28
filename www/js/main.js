@@ -28,16 +28,18 @@ function loadCss(url) {
     link.href = url;
     document.getElementsByTagName("head")[0].appendChild(link);
 }
+loadCss("view/ui/bootstrap.css");
 loadCss("css/ema.css");
 loadCss("css/main.css");
 loadCss("css/appframework.css");
 loadCss("css/badges.css");
 loadCss("css/buttons.css");
 loadCss("css/lists.css");
-loadCss("css/forms.css");
+//loadCss("css/forms.css");
 loadCss("css/grid.css");
 loadCss("css/android.css");
 loadCss("css/icons.css");
+
 //requirejs.config({
 //  baseUrl: 'js',
 //  paths: {
@@ -173,8 +175,11 @@ function verifyLogin(){
                     localStorage.setItem("username", $("#txtName").val());
                     localStorage.setItem("password", $("#txtPwd").val());
                     localStorage.setItem("login_rem", true);
-                }else
+                }else{
+                	localStorage.setItem("username", '');
+                    localStorage.setItem("password", '');
                     localStorage.setItem("login_rem", false);
+                }
             }else{
             	$.ui.disableSideMenu();
                 if(data.m)
@@ -224,7 +229,7 @@ function caseList(){
         dataType: 'json',
         timeout:5000,
         success: function (res) {
-            scope = angular.element(document.getElementById('caselist')).scope();
+            scope = angular.element($('#caselist')).scope();
             scope.$apply(function() {
                 scope.cases = res.data;
             });
@@ -238,6 +243,55 @@ function caseList(){
     });
 }
 
+function loadCase(obj){
+	$.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+	var sAppNumber = obj.getAttribute('data-app-number');
+	
+	$.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=openCase',
+        data: {w:logWs,u:logUsrUid},
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+        	console.log(res);
+            scope = angular.element($('#caselist')).scope();
+            scope.$apply(function() {
+                scope.cases = res.data;
+            });
+            $.query('#caselist_header_pageTitle').html('Case List ' + '<span class="af-badge" style="position:relative;top:5px;left:1px;background-color:#777;">'+res.totalCount+'</span>');
+            $.ui.scrollToTop('caselist');
+            $.query(".afui_panel_mask").remove();
+        },
+        error:function(){
+            $.query(".afui_panel_mask").remove();
+        }
+    });
+	
+	scopeRunCase = angular.element($('#runCase')).scope();
+    scopeRunCase.$apply(function() {
+		if(sAppNumber == 1)
+		scopeRunCase.runCase_formUrl = 'view/default/b.html';
+		else
+        scopeRunCase.runCase_formUrl = 'view/default/a.html';
+//      $.ui.loadContent('runCase',false,true,'flip');
+        $.ui.showModal("#runCase","fade");
+        $.ui.scrollToTop('runCase');
+        var sCaseTitle = 'Title: GREGORY_KELLER/2013-2014';
+        $('#modalHeader > header > h1').attr('style','overflow:visible;');
+        $('#modalHeader > header > h1').html('<span style="font-size:14px;">Case #: '+sAppNumber + '&nbsp;&nbsp;&nbsp;' + sCaseTitle + '</span>');
+        $.query(".afui_panel_mask").remove();
+    }); 
+}
+
+function loadCase_before(){
+	console.log('before');
+}
+function loadCase_after(){
+	console.log('after');
+}
+
 function menuList(){
     $.ajax({
         type: 'post',
@@ -246,7 +300,7 @@ function menuList(){
         dataType: 'json',
         timeout:5000,
         success: function (res) {
-            scopeNav = angular.element(document.getElementById('caselist_side')).scope();
+            scopeNav = angular.element($('#caselist_side')).scope();
             scopeNav.$apply(function() {
                 scopeNav.menus = res;
                 scopeNav.isAudit = logIsAudit;
@@ -283,7 +337,7 @@ function userListAjax(obj){
         dataType: 'json',
         timeout:5000,
         success: function (res) {
-            scopeUserList = angular.element(document.getElementById('userList')).scope();
+            scopeUserList = angular.element($('#userList')).scope();
             scopeUserList.$apply(function() {
                 scopeUserList.users = res.data;
                 scopeUserList.ratcolor = logRatingColor;
@@ -312,7 +366,7 @@ function userTags(){
         success: function (res) {
             res.data[0].RATING_COLORS = eval('logRatingColor.'+res.data[0].RATING+'.RAT_COLOR');
             segments = renderFormTag(res.data[0], logSegment);
-            scopeTagList = angular.element(document.getElementById('tagList')).scope();
+            scopeTagList = angular.element($('#tagList')).scope();
             scopeTagList.$apply(function() {
                 scopeTagList.segments = segments;
                 scopeTagList.tags = res.data[0];
@@ -397,7 +451,7 @@ function tagListAjax(sUsrUid,iSchId){
         success: function (res) {
             res.data[0].RATING_COLORS = eval('logRatingColor.'+res.data[0].RATING+'.RAT_COLOR');
             segments = renderFormTag(res.data[0], logSegment);
-            scopeTagList = angular.element(document.getElementById('tagList')).scope();
+            scopeTagList = angular.element($('#tagList')).scope();
             scopeTagList.$apply(function() {
                 scopeTagList.segments = segments;
                 scopeTagList.tags = res.data[0];
@@ -644,7 +698,7 @@ function showCaseInfo(result,sFormInfo,sTag,iHaveUpgrade,sUsrUid,sWyUid,sOperato
     body += '</div>';//--ED-EDM-panel-footer end
     
     var caseInfo = header + body;
-    scopeCaseInfo = angular.element(document.getElementById('caseInfo')).scope();
+    scopeCaseInfo = angular.element($('#caseInfo')).scope();
     scopeCaseInfo.$apply(function() {
         scopeCaseInfo.caseInfo = caseInfo;
         $.ui.loadContent('caseInfo',false,true,'flip');

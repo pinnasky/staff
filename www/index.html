@@ -7,8 +7,6 @@
 	    <meta name="apple-mobile-web-app-capable" content="yes" />
 	    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-
     </head>
     <body ng-app="staffApp" ng-controller="staffPageInfo">
         <div id="afui" class="light">
@@ -31,31 +29,41 @@
 			     	<div style="overflow: auto">
 			            <p id='login_info'>An automated system that provides a Principal console that monitors all staff evaluation forms. These forms are electronic smart forms, that change status when the forms is in progress and again when completed. Each form promotes a professional conversation between the principal and the teacher.</p>
 			            <div style="margin-top: 50px;">
-				            <div style="float:left;text-align: right;">
+				            <div class="pull-left text-center col-sm-3 col-xs-3">
 					            <img src="icon.png"/>
 							</div>
-							<div style="float:left;width:70%;margin-bottom: 50px;">
-					            <form id="form">
-					                <label for="txtName">User</label>
-					                <input style="width:200px;" type='text' placeholder="Login Name" class='af-ui-forms' id="txtName" value="{{loginname}}">
-					                <br>
-					                <label for="txtPwd">Password</label>
-					                <input style="width:200px;" type='password' placeholder="Password" class='af-ui-forms' id="txtPwd" value="{{password}}">
-					                <br />
-				                	<label>&nbsp;</label>
-					                <div style="overflow: hidden;">
-						                <div style="float: left;padding-top: 5px;">
-						                	<input type="checkbox" name="login_rem" id="login_rem">  
-						                	<label style="font-size: 70%; width: 50%;" for="login_rem">Remember</label>
-						                </div>
-						                <div id="trans-input-ws" style="float: right;">
-							    			<input type='text' placeholder="Workspace" id="txtWs" value="{{ws}}">
-							    		</div>
-					                </div>
-					                <br>
-					                <br>
-					                <input type="button" class="btn btn-primary btn-block" onclick="return verifyLogin();" id="btnLogin" value="Login" style="float:right;">
-				            	</form>
+							<div class="pull-left text-left col-sm-6 col-xs-6" style="margin-bottom: 50px;">
+								<form id="form" class="form-horizontal" role="form">
+								  <div class="form-group">
+								    <label for="txtName" class="col-sm-2 control-label">User</label>
+								    <div class="col-sm-10">
+								      <input id="txtName" value="{{loginname}}" type="text" class="form-control" placeholder="Login Name">
+								    </div>
+								  </div>
+								  <div class="form-group">
+								    <label for="txtPwd" class="col-sm-2 control-label">Password</label>
+								    <div class="col-sm-10">
+								      <input id="txtPwd" value="{{password}}" type="password" class="form-control" placeholder="Password">
+								    </div>
+								  </div>
+								  <div class="form-group">
+								    <div class="col-sm-offset-2 col-sm-5">
+								      <div class="checkbox">
+								        <label>
+								          <input name="login_rem" id="login_rem" type="checkbox"> Remember me
+								        </label>
+								      </div>
+								    </div>
+								    <div id="trans-input-ws" class="col-sm-5 pull-right">
+															    			<input type='text' class="form-control pull-right" placeholder="Workspace" id="txtWs" value="{{ws}}">
+															    		</div>
+								  </div>
+								  <div class="form-group">
+								    <div class="col-sm-offset-2 col-sm-10">
+								      <input type="button" class="btn btn-primary btn-block" onclick="return verifyLogin();" id="btnLogin" value="Login" style="float:right;">
+								    </div>
+								  </div>
+								</form>
 			            	</div>
 		            	</div>
 		            </div>
@@ -87,7 +95,7 @@
 						<div ng-repeat="case in cases">
 							<table class="ema-table ema-table-condensed ema-table-hover">
 								<tbody style="overflow: hidden;word-break: break-all;">
-									<tr>
+									<tr onclick="loadCase(this)" data-app-number = "{{case.APP_NUMBER}}">
 								      	<td width="10%">{{case.APP_NUMBER}}</td>
 										<td width="30%">{{case.APP_TITLE}}</td>
 				        				<td width="35%">{{case.APP_PRO_TITLE}}</td>
@@ -164,9 +172,11 @@
 		        <div id="userList" class="panel" data-header = "userList_header"
 		        data-nav = "caselist_side" data-footer = "none">
 		        	<br />
-					<div style="width: 75%;">
-						<input id="userListSearch" style="width:70%;" class="input-sm" ng-model="userListSearch" type="search" placeholder="Please input first name or last name ">
+					<div class="input-group col-xs-6">
+						<input id="userListSearch" type="text" class="form-control" ng-model="userListSearch" placeholder="Please input first name or last name ">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
+					<br>
 					<div class="x-clear"></div>
 		        	<div>
 			    		<div>
@@ -283,14 +293,20 @@
 		        data-nav = "caselist_side" >
 		        	<div ng-bind-html="trustHtml(caseInfo)"></div>
 		        </div>
-		        <header id="caseInfo_header" style="text-align: center;">
-		        	<!--<a id="backButton" onclick="$.ui.goBack()" class='button'>Back</a>-->
-                    <h1 id="caseInfo_pageTitle" class="">Form C: Informal Observation v1.3</h1>
-		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
-		        </header>
 		        
 		        <!-- Evaluator List-->
 		        
+		        <!-- Running Case -->
+		        <div id="runCase" class="panel"
+		        data-title = ""
+		        data-footer = "none"
+		        data-load = "loadCase_before"
+		        data-unload = "loadCase_after"
+		        >
+		        	<div ng-include="runCase_formUrl" style="margin-top: 15px;">
+		        		This will replaced by specific form
+		        	</div>
+		        </div>
 		        
 		    </div> <!--content end-->
 		    
@@ -307,6 +323,8 @@
 		<script type="text/javascript" charset="utf-8" src="js/controllers.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/af.desktopBrowsers.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/main.js"></script>
-
+		
+		<script src="view/ui/ui-bootstrap-tpls-0.10.0.js"></script>
+		<!--<script src="view/ui/bootstrap.js"></script>-->
     </body>
 </html>
