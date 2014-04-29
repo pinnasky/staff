@@ -248,27 +248,6 @@ function loadCase(obj){
     $.query(".afui_panel_mask").show();
 	var sAppNumber = obj.getAttribute('data-app-number');
 	
-	$.ajax({
-        type: 'post',
-        url: httpUrl+'appDo/ema.php?action=openCase',
-        data: {w:logWs,u:logUsrUid},
-        dataType: 'json',
-        timeout:5000,
-        success: function (res) {
-        	console.log(res);
-            scope = angular.element($('#caselist')).scope();
-            scope.$apply(function() {
-                scope.cases = res.data;
-            });
-            $.query('#caselist_header_pageTitle').html('Case List ' + '<span class="af-badge" style="position:relative;top:5px;left:1px;background-color:#777;">'+res.totalCount+'</span>');
-            $.ui.scrollToTop('caselist');
-            $.query(".afui_panel_mask").remove();
-        },
-        error:function(){
-            $.query(".afui_panel_mask").remove();
-        }
-    });
-	
 	scopeRunCase = angular.element($('#runCase')).scope();
     scopeRunCase.$apply(function() {
 		if(sAppNumber == 1)
@@ -290,6 +269,49 @@ function loadCase_before(){
 }
 function loadCase_after(){
 	console.log('after');
+}
+
+function openCase(obj){
+	$.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+    var sAppNumber = obj.getAttribute('data-app_number');
+    var sAppTitle = obj.getAttribute('data-app_title');
+    var sAppUid = obj.getAttribute('data-app_uid');
+    var iDelIndex = obj.getAttribute('data-del_index');
+	$.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=openCase',
+        data: {w:logWs,u:logUsrUid,APP_UID:sAppUid,DEL_INDEX:iDelIndex},
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+            scopeRunCase = angular.element($('#openCase')).scope();
+		    scopeRunCase.$apply(function() {
+		        scopeRunCase.sFormContent = res.DYNAFORM;
+		        //assign value
+		        for( key in res.FORM_VARS){
+		        	eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
+		        }
+		        $.ui.showModal("#openCase","fade");
+		        $.ui.scrollToTop('openCase');
+		        $('#modalHeader > header > h1').attr('style','overflow:visible;');
+		        $('#modalHeader > header > h1').html('<span style="font-size:14px;">Case #: '+sAppNumber + '&nbsp;&nbsp;&nbsp;' + sAppTitle + '</span>');
+		        $.query(".afui_panel_mask").remove();
+		    }); 
+            $.query(".afui_panel_mask").remove();
+        },
+        error:function(){
+            $.query(".afui_panel_mask").remove();
+        }
+    });
+	
+}
+
+function openCase_before(){
+	console.log('open before');
+}
+function openCase_after(){
+	console.log('open after');
 }
 
 function menuList(){

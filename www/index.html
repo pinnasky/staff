@@ -95,7 +95,9 @@
 						<div ng-repeat="case in cases">
 							<table class="ema-table ema-table-condensed ema-table-hover">
 								<tbody style="overflow: hidden;word-break: break-all;">
-									<tr onclick="loadCase(this)" data-app-number = "{{case.APP_NUMBER}}">
+									<tr onclick="openCase(this)" 
+									data-app_number = "{{case.APP_NUMBER}}" data-app_title = "{{case.APP_TITLE}}" 
+									data-app_uid = "{{case.APP_UID}}" data-del_index = "{{case.DEL_INDEX}}">
 								      	<td width="10%">{{case.APP_NUMBER}}</td>
 										<td width="30%">{{case.APP_TITLE}}</td>
 				        				<td width="35%">{{case.APP_PRO_TITLE}}</td>
@@ -306,6 +308,17 @@
 		        	<div ng-include="runCase_formUrl" style="margin-top: 15px;">
 		        		This will replaced by specific form
 		        	</div>
+		        </div>
+		        
+		        <!-- open case -->
+		        <div id="openCase" class="panel"
+		        data-title = ""
+		        data-footer = "none"
+		        data-load = "openCase_before"
+		        data-unload = "openCase_after"
+		        >
+		        	<div compile="sFormContent" style="margin-top: 15px;"></div>
+		        	<!--<div ng-bind-html="trustHtml(sFormContent)" style="margin-top: 15px;"></div>-->
 		        </div>
 		        
 		    </div> <!--content end-->
