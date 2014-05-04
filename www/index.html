@@ -317,8 +317,9 @@
 		        data-load = "openCase_before"
 		        data-unload = "openCase_after"
 		        >
-		        	<form id="case_save_form" method="post" action="" data-dyn-uid="{{sDyn_Uid}}">
+		        	<form id="case_save_form" method="post" action="" data-dyn-uid="{{sDyn_Uid}}" enctype="multipart/form-data" target="case_save_iframe">
 		        		<div compile="sFormContent" style="margin-top: 15px;"></div>
+		        		<iframe id="case_save_iframe" name="case_save_iframe" src="#" style="width: 0; height: 0; border: 0px solid #fff;"></iframe>
 		        	</form>
 		        	<!--<div ng-bind-html="trustHtml(sFormContent)" style="margin-top: 15px;"></div>-->
 		        </div>
