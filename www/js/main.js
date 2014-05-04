@@ -21,6 +21,17 @@ function toArray(elements){
     }
     return values;
 }
+function evalJs( jsCode ){
+    var scpt = document.getElementById('scpt_form_js')
+    if(!scpt){
+        var scpt = document.createElement('script');
+        scpt.id = 'scpt_form_js';
+    }
+    var head = document.getElementsByTagName('head')[0]; 
+    scpt.text += jsCode;   
+    head.insertBefore( scpt ,head.lastChild );   
+    head.removeChild( scpt );   
+}
 function loadCss(url) {
     var link = document.createElement("link");
     link.type = "text/css";
@@ -288,16 +299,16 @@ function openCase(obj){
             scopeRunCase = angular.element($('#openCase')).scope();
 		    scopeRunCase.$apply(function() {
 		        scopeRunCase.sFormContent = res.DYNAFORM;
-		        //assign value
-		        for( key in res.FORM_VARS){
-		        	eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
-		        }
-		        $.ui.showModal("#openCase","fade");
-		        $.ui.scrollToTop('openCase');
-		        $('#modalHeader > header > h1').attr('style','overflow:visible;');
-		        $('#modalHeader > header > h1').html('<span style="font-size:14px;">Case #: '+sAppNumber + '&nbsp;&nbsp;&nbsp;' + sAppTitle + '</span>');
-		        $.query(".afui_panel_mask").remove();
-		    }); 
+                //assign value
+                for( key in res.FORM_VARS){
+                    eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
+                }
+                $.ui.showModal("#openCase","fade");
+                $.ui.scrollToTop('openCase');
+                $('#modalHeader > header > h1').attr('style','overflow:visible;');
+                $('#modalHeader > header > h1').html('<span style="font-size:14px;">Case #: '+sAppNumber + '&nbsp;&nbsp;&nbsp;' + sAppTitle + '</span>');
+            });
+            evalJs(res.FORM_JS);
             $.query(".afui_panel_mask").remove();
         },
         error:function(){
