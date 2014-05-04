@@ -317,7 +317,9 @@
 		        data-load = "openCase_before"
 		        data-unload = "openCase_after"
 		        >
-		        	<div compile="sFormContent" style="margin-top: 15px;"></div>
+		        	<form id="case_save_form" method="post" action="" data-dyn-uid="{{sDyn_Uid}}">
+		        		<div compile="sFormContent" style="margin-top: 15px;"></div>
+		        	</form>
 		        	<!--<div ng-bind-html="trustHtml(sFormContent)" style="margin-top: 15px;"></div>-->
 		        </div>
 		        

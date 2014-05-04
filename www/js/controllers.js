@@ -11,13 +11,16 @@ staffApp.controller('staffPageInfo', function($scope,$sce) {
 	}
 	
 	$scope.userListFilte = function (row) {
-        return !!((angular.lowercase(row.USR_FIRSTNAME).indexOf(angular.lowercase($scope.userListSearch) || '') !== -1 || angular.lowercase(row.USR_LASTNAME).indexOf(angular.lowercase($scope.userListSearch) || '') !== -1));
-    };
-    
-    $scope.trustHtml = function (html) {
-    	return $sce.trustAsHtml(html);
-    }
-    
+    return !!((angular.lowercase(row.USR_FIRSTNAME).indexOf(angular.lowercase($scope.userListSearch) || '') !== -1 || angular.lowercase(row.USR_LASTNAME).indexOf(angular.lowercase($scope.userListSearch) || '') !== -1));
+  };
+  
+  $scope.trustHtml = function (html) {
+  	return $sce.trustAsHtml(html);
+  }
+  
+  $scope.trustUrl = function (url) {
+    return $sce.trustAsUrl(url);
+  }
     
     
 });

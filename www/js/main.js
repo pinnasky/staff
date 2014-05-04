@@ -299,6 +299,8 @@ function openCase(obj){
             scopeRunCase = angular.element($('#openCase')).scope();
 		    scopeRunCase.$apply(function() {
 		        scopeRunCase.sFormContent = res.DYNAFORM;
+                scopeRunCase.sDyn_Uid = res.DYN_UID;
+                // scopeRunCase.sFormAction = httpUrl+'appDo/ema.php?action=cases_SaveData&UID='+res.DYN_UID;
                 //assign value
                 for( key in res.FORM_VARS){
                     eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
@@ -323,6 +325,13 @@ function openCase_before(){
 }
 function openCase_after(){
 	console.log('open after');
+}
+
+function submitForm(){
+    var sDyn_Uid = $('#case_save_form').attr('data-dyn-uid');
+    $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action=cases_SaveData&UID='+sDyn_Uid + '&w='+logWs);
+    document.getElementById("case_save_form").submit();
+    
 }
 
 function menuList(){
