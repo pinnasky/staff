@@ -300,7 +300,8 @@ function openCase(obj){
 		    scopeRunCase.$apply(function() {
 		        scopeRunCase.sFormContent = res.DYNAFORM;
                 scopeRunCase.sDyn_Uid = res.DYN_UID;
-                // scopeRunCase.sFormAction = httpUrl+'appDo/ema.php?action=cases_SaveData&UID='+res.DYN_UID;
+                scopeRunCase.sAppUid = res.APP_UID;
+                scopeRunCase.iDelIndex = res.DEL_INDEX;
                 //assign value
                 for( key in res.FORM_VARS){
                     eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
