@@ -28,42 +28,44 @@
 			     >
 			     	<div style="overflow: auto">
 			            <p id='login_info'>An automated system that provides a Principal console that monitors all staff evaluation forms. These forms are electronic smart forms, that change status when the forms is in progress and again when completed. Each form promotes a professional conversation between the principal and the teacher.</p>
+
+
 			            <div style="margin-top: 50px;">
 				            <div class="pull-left text-center col-sm-3 col-xs-3">
 					            <img src="icon.png"/>
-							</div>
-							<div class="pull-left text-left col-sm-6 col-xs-6" style="margin-bottom: 50px;">
-								<form id="form" class="form-horizontal" role="form">
-								  <div class="form-group">
-								    <label for="txtName" class="col-sm-2 control-label">User</label>
-								    <div class="col-sm-10">
-								      <input id="txtName" value="{{loginname}}" type="text" class="form-control" placeholder="Login Name">
-								    </div>
-								  </div>
-								  <div class="form-group">
-								    <label for="txtPwd" class="col-sm-2 control-label">Password</label>
-								    <div class="col-sm-10">
-								      <input id="txtPwd" value="{{password}}" type="password" class="form-control" placeholder="Password">
-								    </div>
-								  </div>
-								  <div class="form-group">
-								    <div class="col-sm-offset-2 col-sm-5">
-								      <div class="checkbox">
-								        <label style="margin-bottom: 0px; vertical-align: bottom;">
-								          <input name="login_rem" id="login_rem" type="checkbox" style="margin-bottom: 0px; vertical-align: bottom;"> Remember me
-								        </label>
-								      </div>
-								    </div>
-								    <div id="trans-input-ws" class="col-sm-5 pull-right">
-						    			<input type='text' class="form-control pull-right" placeholder="Workspace" id="txtWs" value="{{ws}}">
-						    		</div>
-								  </div>
-								  <div class="form-group">
-								    <div class="col-sm-offset-2 col-sm-10">
-								      <input type="button" class="btn btn-primary btn-block" onclick="return verifyLogin();" id="btnLogin" value="Login" style="float:right;">
-								    </div>
-								  </div>
-								</form>
+										</div>
+										<div class="pull-left text-left col-sm-6 col-xs-6" style="margin-bottom: 50px;">
+										<form id="form" class="form-horizontal" role="form">
+										  <div class="form-group">
+										    <label for="txtName" class="col-sm-2 control-label">User</label>
+										    <div class="col-sm-10">
+										      <input id="txtName" value="{{loginname}}" type="text" class="form-control" placeholder="Login Name">
+										    </div>
+										  </div>
+										  <div class="form-group">
+										    <label for="txtPwd" class="col-sm-2 control-label">Password</label>
+										    <div class="col-sm-10">
+										      <input id="txtPwd" value="{{password}}" type="password" class="form-control" placeholder="Password">
+										    </div>
+										  </div>
+										  <div class="form-group">
+										    <div class="col-sm-offset-2 col-sm-5">
+										      <div class="checkbox">
+										        <label style="margin-bottom: 0px; vertical-align: bottom;">
+										          <input name="login_rem" id="login_rem" type="checkbox" style="margin-bottom: 0px; vertical-align: bottom;"> Remember me
+										        </label>
+										      </div>
+										    </div>
+										    <div id="trans-input-ws" class="col-sm-5 pull-right">
+								    			<input type='text' class="form-control pull-right" placeholder="Workspace" id="txtWs" value="{{ws}}">
+								    		</div>
+										  </div>
+										  <div class="form-group">
+										    <div class="col-sm-offset-2 col-sm-10">
+										      <input type="button" class="btn btn-primary btn-block" onclick="return verifyLogin();" id="btnLogin" value="Login" style="float:right;">
+										    </div>
+										  </div>
+										</form>
 			            	</div>
 		            	</div>
 		            </div>
@@ -317,6 +319,7 @@
 		        data-load = "openCase_before"
 		        data-unload = "openCase_after"
 		        >
+		        
 		        	<form id="case_save_form" method="post" action="" data-dyn-uid="{{sDyn_Uid}}" enctype="multipart/form-data" target="case_save_iframe">
 		        		<div compile="sFormContent" style="margin-top: 15px;"></div>
 		        		<input id="APP_UID" name="APP_UID" type="hidden" value="{{sAppUid}}" />

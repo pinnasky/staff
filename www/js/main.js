@@ -46,7 +46,7 @@ loadCss("css/appframework.css");
 loadCss("css/badges.css");
 loadCss("css/buttons.css");
 loadCss("css/lists.css");
-//loadCss("css/forms.css");
+// loadCss("css/forms.css");
 loadCss("css/grid.css");
 loadCss("css/android.css");
 loadCss("css/icons.css");
@@ -310,9 +310,9 @@ function openCase(obj){
                 $.ui.scrollToTop('openCase');
                 $('#modalHeader > header > h1').attr('style','overflow:visible;');
                 $('#modalHeader > header > h1').html('<span style="font-size:14px;">Case #: '+sAppNumber + '&nbsp;&nbsp;&nbsp;' + sAppTitle + '</span>');
+                $.query(".afui_panel_mask").remove();
             });
             evalJs(res.FORM_JS);
-            $.query(".afui_panel_mask").remove();
         },
         error:function(){
             $.query(".afui_panel_mask").remove();
@@ -330,7 +330,7 @@ function openCase_after(){
 
 function submitForm(){
     var sDyn_Uid = $('#case_save_form').attr('data-dyn-uid');
-    $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action=cases_SaveData&UID='+sDyn_Uid + '&w='+logWs);
+    $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action=cases_SaveData&UID='+sDyn_Uid + '&w='+logWs + '&u='+logUsrUid);
     document.getElementById("case_save_form").submit();
     
 }

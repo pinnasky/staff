@@ -989,8 +989,141 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
 }
 
 #afui .menuButton:hover {
-    border: 1px solid #555555;
-    background-color: #BBBBBB;
-    
+  border: 1px solid #555555;
+  background-color: #BBBBBB;
 }
 
+
+/*for toggle switch*/
+#afui input[type="radio"],
+#afui input[type="checkbox"] {
+  display: none;
+}
+#afui input[type="radio"] + label,
+#afui input[type="checkbox"] + label {
+  display: inline-block;
+  width: 60%;
+  float: right;
+  position: relative;
+  text-align: left;
+  padding: 10px 0 0 0;
+}
+#afui input[type="radio"]:not(.toggle) + label:before {
+  background-color: #fafafa;
+  border: 1px solid #cacece;
+  border-radius: 50px;
+  display: block;
+  position: absolute;
+  width: 1.3em;
+  height: 1.3em;
+  content: '';
+  margin-right: 5px;
+  top: 8px;
+  margin-left: -25px;
+}
+#afui input[type="radio"]:checked + label:before {
+  background-color: #000000;
+}
+#afui input[type="checkbox"] + label:before {
+  background-color: #fafafa;
+  border: 1px solid #cacece;
+  border-radius: 3px;
+  display: block;
+  position: absolute;
+  top: 8px;
+  left: -25px;
+  width: 1.3em;
+  height: 1.3em;
+  content: " ";
+}
+#afui input[type="checkbox"]:checked + label:before {
+  content: '\00a0\2714';
+  padding: 0px;
+  display: inline-block;
+}
+#afui input[type="radio"]:after,
+#afui input[type="checkbox"]:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
+
+#afui input.toggle + label:before,
+#afui input.toggle:checked + label:before {
+  content: attr(data-on);
+  position: absolute;
+  color: #fff;
+  left: 5px;
+  width: 42px;
+  text-align: left;
+  z-index: 3;
+  top: 3px;
+  overflow: hidden;
+  background-color: transparent;
+  border: none;
+  border-radius: 0px;
+  text-transform: uppercase;
+  display: none;
+}
+#afui input.toggle:checked + label:before {
+  display: block;
+}
+#afui input.toggle + label:after {
+  content: attr(data-off);
+  position: absolute;
+  color: #505050;
+  width: 42px;
+  text-align: left;
+  z-index: 1;
+  top: 2px;
+  left: 30px;
+  overflow: hidden;
+  background-color: transparent;
+  border: none;
+  border-radius: 0px;
+  text-transform: uppercase;
+}
+#afui input.toggle:checked + label:after {
+  display: none;
+}
+#afui input[type="radio"].toggle:checked + label:before {
+  line-height: 1.2em;
+}
+#afui input.toggle + label {
+  position: relative;
+  margin: 5px;
+  border-radius: 50px;
+  display: block;
+  height: 24px;
+  width: 65px;
+  border: 1px solid #ccc;
+  left: 33%;
+  float: none;
+}
+#afui input.toggle:checked + label {
+  background: #1eb0e9;
+  line-height: -1em;
+}
+#afui input.toggle + label > span {
+  display: block;
+  width: 28px;
+  height: 28px;
+  background: #ccc;
+  border-radius: 50px;
+  z-index: 5;
+  top: -2px;
+  left: 0px;
+  position: absolute;
+  transition: transform 100ms linear;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-transition: -webkit-transform 100ms linear;
+}
+#afui input.toggle:checked + label > span {
+  transform: translate3d(37px, 0, 0);
+  -webkit-transform: translate3d(37px, 0, 0);
+}
