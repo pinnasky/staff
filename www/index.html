@@ -29,7 +29,6 @@
 			     	<div style="overflow: auto">
 			            <p id='login_info'>An automated system that provides a Principal console that monitors all staff evaluation forms. These forms are electronic smart forms, that change status when the forms is in progress and again when completed. Each form promotes a professional conversation between the principal and the teacher.</p>
 
-
 			            <div style="margin-top: 50px;">
 				            <div class="pull-left text-center col-sm-3 col-xs-3">
 					            <img src="icon.png"/>
@@ -321,9 +320,11 @@
 		        >
 		        
 		        	<form id="case_save_form" method="post" action="" data-dyn-uid="{{sDyn_Uid}}" enctype="multipart/form-data" target="case_save_iframe">
+		        		
 		        		<div compile="sFormContent" style="margin-top: 15px;"></div>
 		        		<input id="APP_UID" name="APP_UID" type="hidden" value="{{sAppUid}}" />
 		        		<input id="DEL_INDEX" name="DEL_INDEX" type="hidden" value="{{iDelIndex}}" />
+		        		<input id="POSITION" name="POSITION" type="hidden" value="{{iPosition}}" />
 		        		<iframe id="case_save_iframe" name="case_save_iframe" src="#" style="width: 0; height: 0; border: 0px solid #fff;"></iframe>
 		        	</form>
 		        	<!--<div ng-bind-html="trustHtml(sFormContent)" style="margin-top: 15px;"></div>-->
@@ -346,6 +347,5 @@
 		<script type="text/javascript" charset="utf-8" src="js/main.js"></script>
 		
 		<script src="view/ui/ui-bootstrap-tpls-0.10.0.js"></script>
-		<!--<script src="view/ui/bootstrap.js"></script>-->
     </body>
 </html>

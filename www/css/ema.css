@@ -995,12 +995,12 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
 
 
 /*for toggle switch*/
-#afui input[type="radio"],
-#afui input[type="checkbox"] {
+#case_save_form input[type="radio"],
+#case_save_form input[type="checkbox"] {
   display: none;
 }
-#afui input[type="radio"] + label,
-#afui input[type="checkbox"] + label {
+#case_save_form input[type="radio"] + label,
+#case_save_form input[type="checkbox"] + label {
   display: inline-block;
   width: 60%;
   float: right;
@@ -1008,7 +1008,7 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
   text-align: left;
   padding: 10px 0 0 0;
 }
-#afui input[type="radio"]:not(.toggle) + label:before {
+#case_save_form input[type="radio"]:not(.toggle) + label:before {
   background-color: #fafafa;
   border: 1px solid #cacece;
   border-radius: 50px;
@@ -1021,10 +1021,10 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
   top: 8px;
   margin-left: -25px;
 }
-#afui input[type="radio"]:checked + label:before {
+#case_save_form input[type="radio"]:checked + label:before {
   background-color: #000000;
 }
-#afui input[type="checkbox"] + label:before {
+#case_save_form input[type="checkbox"] + label:before {
   background-color: #fafafa;
   border: 1px solid #cacece;
   border-radius: 3px;
@@ -1036,13 +1036,13 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
   height: 1.3em;
   content: " ";
 }
-#afui input[type="checkbox"]:checked + label:before {
+#case_save_form input[type="checkbox"]:checked + label:before {
   content: '\00a0\2714';
   padding: 0px;
   display: inline-block;
 }
-#afui input[type="radio"]:after,
-#afui input[type="checkbox"]:after {
+#case_save_form input[type="radio"]:after,
+#case_save_form input[type="checkbox"]:after {
   visibility: hidden;
   display: block;
   font-size: 0;
@@ -1052,8 +1052,8 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
 }
 
 
-#afui input.toggle + label:before,
-#afui input.toggle:checked + label:before {
+#case_save_form input.toggle + label:before,
+#case_save_form input.toggle:checked + label:before {
   content: attr(data-on);
   position: absolute;
   color: #fff;
@@ -1069,10 +1069,10 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
   text-transform: uppercase;
   display: none;
 }
-#afui input.toggle:checked + label:before {
+#case_save_form input.toggle:checked + label:before {
   display: block;
 }
-#afui input.toggle + label:after {
+#case_save_form input.toggle + label:after {
   content: attr(data-off);
   position: absolute;
   color: #505050;
@@ -1087,13 +1087,13 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
   border-radius: 0px;
   text-transform: uppercase;
 }
-#afui input.toggle:checked + label:after {
+#case_save_form input.toggle:checked + label:after {
   display: none;
 }
-#afui input[type="radio"].toggle:checked + label:before {
+#case_save_form input[type="radio"].toggle:checked + label:before {
   line-height: 1.2em;
 }
-#afui input.toggle + label {
+#case_save_form input.toggle + label {
   position: relative;
   margin: 5px;
   border-radius: 50px;
@@ -1101,14 +1101,14 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
   height: 24px;
   width: 65px;
   border: 1px solid #ccc;
-  left: 33%;
+  left: 40%;
   float: none;
 }
-#afui input.toggle:checked + label {
+#case_save_form input.toggle:checked + label {
   background: #1eb0e9;
   line-height: -1em;
 }
-#afui input.toggle + label > span {
+#case_save_form input.toggle + label > span {
   display: block;
   width: 28px;
   height: 28px;
@@ -1123,7 +1123,7 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
   -webkit-transform: translate3d(0, 0, 0);
   -webkit-transition: -webkit-transform 100ms linear;
 }
-#afui input.toggle:checked + label > span {
+#case_save_form input.toggle:checked + label > span {
   transform: translate3d(37px, 0, 0);
   -webkit-transform: translate3d(37px, 0, 0);
 }

@@ -39,7 +39,6 @@ function loadCss(url) {
     link.href = url;
     document.getElementsByTagName("head")[0].appendChild(link);
 }
-loadCss("view/ui/bootstrap.css");
 loadCss("css/ema.css");
 loadCss("css/main.css");
 loadCss("css/appframework.css");
@@ -50,6 +49,7 @@ loadCss("css/lists.css");
 loadCss("css/grid.css");
 loadCss("css/android.css");
 loadCss("css/icons.css");
+loadCss("view/ui/bootstrap.css");
 
 //requirejs.config({
 //  baseUrl: 'js',
@@ -302,6 +302,7 @@ function openCase(obj){
                 scopeRunCase.sDyn_Uid = res.DYN_UID;
                 scopeRunCase.sAppUid = res.APP_UID;
                 scopeRunCase.iDelIndex = res.DEL_INDEX;
+                scopeRunCase.iPosition = res.POSITION;
                 //assign value
                 for( key in res.FORM_VARS){
                     eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');

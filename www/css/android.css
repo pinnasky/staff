@@ -122,10 +122,10 @@
 
 #afui.android input.toggle+label:after { color:inherit; }
 
-#afui.android input.toggle+label { border-radius:0; }
+/*#afui.android input.toggle+label { border-radius:0; }*/  /*remove by wesley*/
 
 #afui.android input.toggle+label > span {
-	border-radius:0;
+	/*border-radius:0;*/ /*remove by wesley*/
 	top:0;
 	width:27px;
 	height:23px;

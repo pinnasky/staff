@@ -148,10 +148,10 @@
 
 #afui input.toggle+label:after { color:inherit; }
 
-#afui input.toggle+label { border-radius:0; }
+/*#afui input.toggle+label { border-radius:0; }*/  /*remove by wesley*/
 
 #afui input.toggle+label > span {
-    border-radius:0;
+    /*border-radius:0;*/    /*remove by wesley*/
     top:0;
     width:27px;
     height:23px;
