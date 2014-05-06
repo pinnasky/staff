@@ -5,6 +5,13 @@ String.prototype.format = function() {
     });
 };
 
+window.addEventListener('message',function(e){
+if(e.origin!='null'){
+    var oRes = $.parseJSON(e.data);
+    submitOK(oRes);
+}
+},false);
+
 String.format = function(template) {
     if(0 == arguments.length) return null;
     var args = Array.prototype.slice.call(arguments, 1);
@@ -332,8 +339,34 @@ function openCase_after(){
 function submitForm(){
     var sDyn_Uid = $('#case_save_form').attr('data-dyn-uid');
     $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action=cases_SaveData&UID='+sDyn_Uid + '&w='+logWs + '&u='+logUsrUid);
+    $.ui.scrollToTop('openCase');
+    console.log('message');
     document.getElementById("case_save_form").submit();
-    
+    $.query('.btn').addClass('disabled');
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+}
+
+function submitOK(res){
+    console.log(res);
+    $.ui.scrollToTop('case_save_form');
+    scopeRunCase = angular.element($('#openCase')).scope();
+    scopeRunCase.$apply(function() {
+        scopeRunCase.sFormContent = res.DYNAFORM;
+        scopeRunCase.sDyn_Uid = res.DYN_UID;
+        scopeRunCase.sAppUid = res.APP_UID;
+        scopeRunCase.iDelIndex = res.DEL_INDEX;
+        scopeRunCase.iPosition = res.POSITION;
+        //assign value
+        for( key in res.FORM_VARS){
+            eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
+        }
+        //$.ui.hideModal("#openCase","fade");
+        //$.ui.showModal("#openCase","fade");
+        $('#modalHeader > header > h1').attr('style','overflow:visible;');
+        $.query(".afui_panel_mask").remove();
+    });
+    evalJs(res.FORM_JS);
 }
 
 function menuList(){
