@@ -24,6 +24,9 @@ staffApp.controller('staffPageInfo', function($scope,$sce) {
     
     
 });
+
+
+
 staffApp.directive('compile', function($compile) {
       // directive factory creates a link function
       return function(scope, element, attrs) {

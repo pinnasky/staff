@@ -336,11 +336,18 @@ function openCase_after(){
 	console.log('open after');
 }
 
+function showMsg(msg){
+    $('#modal-dialog-body').html(msg);
+    $('#modal-dialog').show();
+}
+function hideMsg(){
+    $('#modal-dialog').hide();
+}
+
 function submitForm(){
     var sDyn_Uid = $('#case_save_form').attr('data-dyn-uid');
     $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action=cases_SaveData&UID='+sDyn_Uid + '&w='+logWs + '&u='+logUsrUid);
-    $.ui.scrollToTop('openCase');
-    console.log('message');
+    
     document.getElementById("case_save_form").submit();
     $.query('.btn').addClass('disabled');
     $.query("#afui").append('<div class="afui_panel_mask"></div>');
@@ -348,8 +355,9 @@ function submitForm(){
 }
 
 function submitOK(res){
-    console.log(res);
-    $.ui.scrollToTop('case_save_form');
+    // console.log(res);
+    var modal = $.query('#modalContainer > div')[0];
+    modal.setAttribute('style','transform:matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);-webkit-transform:matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)');
     scopeRunCase = angular.element($('#openCase')).scope();
     scopeRunCase.$apply(function() {
         scopeRunCase.sFormContent = res.DYNAFORM;
@@ -361,8 +369,6 @@ function submitOK(res){
         for( key in res.FORM_VARS){
             eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
         }
-        //$.ui.hideModal("#openCase","fade");
-        //$.ui.showModal("#openCase","fade");
         $('#modalHeader > header > h1').attr('style','overflow:visible;');
         $.query(".afui_panel_mask").remove();
     });

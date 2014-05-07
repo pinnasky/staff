@@ -329,8 +329,22 @@
 		        	</form>
 		        	<!--<div ng-bind-html="trustHtml(sFormContent)" style="margin-top: 15px;"></div>-->
 		        </div>
-		        
+		    
+
 		    </div> <!--content end-->
+	    <div id="modal-dialog" class="modal" style="display:none;z-index: 99999;">
+			  <div class="modal-dialog" style="margin-top: 10%;">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close pull-right" onclick="hideMsg()" style="margin-top: -11px;">&times;</button>
+			      </div>
+			      <div id="modal-dialog-body" class="modal-body">
+			        <p>One fine body&hellip;</p>
+			      </div>
+			      
+			    </div><!-- /.modal-content -->
+			  </div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
 		    
         </div><!--afui end-->
 		<!--<script data-main="js/main.js" src="js/require.js"></script>-->
