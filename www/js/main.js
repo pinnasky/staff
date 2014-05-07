@@ -310,6 +310,7 @@ function openCase(obj){
                 scopeRunCase.sAppUid = res.APP_UID;
                 scopeRunCase.iDelIndex = res.DEL_INDEX;
                 scopeRunCase.iPosition = res.POSITION;
+                scopeRunCase.sFormAction = res.FORM_ACTION;
                 //assign value
                 for( key in res.FORM_VARS){
                     eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
@@ -346,7 +347,8 @@ function hideMsg(){
 
 function submitForm(){
     var sDyn_Uid = $('#case_save_form').attr('data-dyn-uid');
-    $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action=cases_SaveData&UID='+sDyn_Uid + '&w='+logWs + '&u='+logUsrUid);
+    var sAction = $('#case_save_form').attr('action');
+    $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action='+sAction);
     
     document.getElementById("case_save_form").submit();
     $.query('.btn').addClass('disabled');
@@ -355,19 +357,20 @@ function submitForm(){
 }
 
 function submitOK(res){
-    // console.log(res);
+    console.log(res);
     var modal = $.query('#modalContainer > div')[0];
     modal.setAttribute('style','transform:matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);-webkit-transform:matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)');
-    scopeRunCase = angular.element($('#openCase')).scope();
-    scopeRunCase.$apply(function() {
-        scopeRunCase.sFormContent = res.DYNAFORM;
-        scopeRunCase.sDyn_Uid = res.DYN_UID;
-        scopeRunCase.sAppUid = res.APP_UID;
-        scopeRunCase.iDelIndex = res.DEL_INDEX;
-        scopeRunCase.iPosition = res.POSITION;
+    scopeSubmitOk = angular.element($('#openCase')).scope();
+    scopeSubmitOk.$apply(function() {
+        scopeSubmitOk.sFormContent = res.DYNAFORM;
+        scopeSubmitOk.sDyn_Uid = res.DYN_UID;
+        scopeSubmitOk.sAppUid = res.APP_UID;
+        scopeSubmitOk.iDelIndex = res.DEL_INDEX;
+        scopeSubmitOk.iPosition = res.POSITION;
+        scopeSubmitOk.sFormAction = res.FORM_ACTION;
         //assign value
         for( key in res.FORM_VARS){
-            eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
+            eval('scopeSubmitOk.'+key+'="'+res.FORM_VARS[key]+'"');
         }
         $('#modalHeader > header > h1').attr('style','overflow:visible;');
         $.query(".afui_panel_mask").remove();
@@ -379,7 +382,7 @@ function menuList(){
     $.ajax({
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=menuList',
-        data: {w:logWs,u:logUsrUid,SCH_ID:'2'},
+        data: {w:logWs,u:logUsrUid,SCH_ID:logSchId},
         dataType: 'json',
         timeout:5000,
         success: function (res) {
