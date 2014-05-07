@@ -8,7 +8,16 @@ String.prototype.format = function() {
 window.addEventListener('message',function(e){
 if(e.origin!='null'){
     var oRes = $.parseJSON(e.data);
-    submitOK(oRes);
+    switch (oRes.POST_TYPE){
+        case 'save':
+            saveOK(oRes);
+            break;
+        case 'submit':
+            submitOK(oRes);
+            break;
+        default :
+        //TODO
+    }
 }
 },false);
 
@@ -261,34 +270,6 @@ function caseList(){
     });
 }
 
-function loadCase(obj){
-	$.query("#afui").append('<div class="afui_panel_mask"></div>');
-    $.query(".afui_panel_mask").show();
-	var sAppNumber = obj.getAttribute('data-app-number');
-	
-	scopeRunCase = angular.element($('#runCase')).scope();
-    scopeRunCase.$apply(function() {
-		if(sAppNumber == 1)
-		scopeRunCase.runCase_formUrl = 'view/default/b.html';
-		else
-        scopeRunCase.runCase_formUrl = 'view/default/a.html';
-//      $.ui.loadContent('runCase',false,true,'flip');
-        $.ui.showModal("#runCase","fade");
-        $.ui.scrollToTop('runCase');
-        var sCaseTitle = 'Title: GREGORY_KELLER/2013-2014';
-        $('#modalHeader > header > h1').attr('style','overflow:visible;');
-        $('#modalHeader > header > h1').html('<span style="font-size:14px;">Case #: '+sAppNumber + '&nbsp;&nbsp;&nbsp;' + sCaseTitle + '</span>');
-        $.query(".afui_panel_mask").remove();
-    }); 
-}
-
-function loadCase_before(){
-	console.log('before');
-}
-function loadCase_after(){
-	console.log('after');
-}
-
 function openCase(obj){
 	$.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
@@ -306,7 +287,6 @@ function openCase(obj){
             scopeRunCase = angular.element($('#openCase')).scope();
 		    scopeRunCase.$apply(function() {
 		        scopeRunCase.sFormContent = res.DYNAFORM;
-                scopeRunCase.sDyn_Uid = res.DYN_UID;
                 scopeRunCase.sAppUid = res.APP_UID;
                 scopeRunCase.iDelIndex = res.DEL_INDEX;
                 scopeRunCase.iPosition = res.POSITION;
@@ -327,13 +307,13 @@ function openCase(obj){
             $.query(".afui_panel_mask").remove();
         }
     });
-	
 }
 
 function openCase_before(){
 	console.log('open before');
 }
 function openCase_after(){
+    
 	console.log('open after');
 }
 
@@ -346,8 +326,7 @@ function hideMsg(){
 }
 
 function submitForm(){
-    var sDyn_Uid = $('#case_save_form').attr('data-dyn-uid');
-    var sAction = $('#case_save_form').attr('action');
+    var sAction = $('#case_save_form').attr('data-temp-action');
     $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action='+sAction);
     
     document.getElementById("case_save_form").submit();
@@ -357,13 +336,11 @@ function submitForm(){
 }
 
 function submitOK(res){
-    console.log(res);
     var modal = $.query('#modalContainer > div')[0];
     modal.setAttribute('style','transform:matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);-webkit-transform:matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)');
     scopeSubmitOk = angular.element($('#openCase')).scope();
     scopeSubmitOk.$apply(function() {
         scopeSubmitOk.sFormContent = res.DYNAFORM;
-        scopeSubmitOk.sDyn_Uid = res.DYN_UID;
         scopeSubmitOk.sAppUid = res.APP_UID;
         scopeSubmitOk.iDelIndex = res.DEL_INDEX;
         scopeSubmitOk.iPosition = res.POSITION;
@@ -374,8 +351,27 @@ function submitOK(res){
         }
         $('#modalHeader > header > h1').attr('style','overflow:visible;');
         $.query(".afui_panel_mask").remove();
+        $.query('.btn').removeClass('disabled');
     });
     evalJs(res.FORM_JS);
+}
+
+function saveForm(){
+    var sAction = $('#case_save_form').attr('data-temp-action');
+    $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action='+sAction+'&_AUTOSAVING_=1');
+    
+    document.getElementById("case_save_form").submit();
+    $.ui.showMask('Saving Data...');
+    $.query('.btn').addClass('disabled');
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+}
+
+function saveOK(res){
+    $.ui.hideModal("#openCase","fade");
+    $.ui.hideMask();
+    caseList();
+    $.query('.btn').removeClass('disabled');
 }
 
 function menuList(){

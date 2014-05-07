@@ -319,8 +319,9 @@
 		        data-unload = "openCase_after"
 		        >
 		        
-		        	<form id="case_save_form" method="post" action="{{sFormAction}}" data-dyn-uid="{{sDyn_Uid}}" enctype="multipart/form-data" target="case_save_iframe">
-		        		
+		        	<form id="case_save_form" method="post" action="" data-temp-action="{{sFormAction}}" enctype="multipart/form-data" target="case_save_iframe">
+		        		<!-- <input name="form[xxx][rdxx]" checked="" id="form[xxx][rdxx]" class="toggle" type="checkbox"><label for="form[xxx][rdxx]" data-on="Yes" data-off="No"><span></span></label> -->
+
 		        		<div compile="sFormContent" style="margin-top: 15px;"></div>
 		        		<input id="APP_UID" name="APP_UID" type="hidden" value="{{sAppUid}}" />
 		        		<input id="DEL_INDEX" name="DEL_INDEX" type="hidden" value="{{iDelIndex}}" />
