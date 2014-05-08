@@ -96,6 +96,11 @@ $("#txtPwd").keypress(function( event ) {
         $( "#btnLogin").click();
     }
 });
+$("#txtName").keypress(function( event ) {
+    if ( event.which === 13 ) {
+        $( "#btnLogin").click();
+    }
+});
 function onDeviceReady() {
     document.addEventListener("backbutton", function(){return false;}, false);
     if($.os.android)
@@ -334,6 +339,7 @@ function openCase_after(){
     $.query('#form[btnSave]').removeClass('disabled');
     $.query('#form[btnSubmit]').removeClass('disabled');
     $.query('#btnContinue').removeClass('disabled');
+    $('#modalHeader > header > a').attr('style','');
 }
 
 function showMsg(msg){
@@ -375,6 +381,7 @@ function submitOK(res){
 function derivateForm(){
     document.getElementById("case_save_form").submit();
     $.query('#btnContinue').addClass('disabled');
+    $('#modalHeader > header > a').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');
     $.query('#btnContinue').val('Processing ...');
     $.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
