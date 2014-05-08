@@ -252,11 +252,11 @@ function loadedLogin(what) {
     
 }
 
-function caseList(){
+function caseList(needInit = 1){
     $.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
     
-    userInfo();
+    if(needInit)    userInfo();
     $.ajax({
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=caseList',
@@ -329,10 +329,10 @@ function openCase_after(){
     var sPostType = $('#form_post_type').val();
     switch (sPostType){
         case 'save':
-            caseList();
+            caseList(0);
             break;
         case 'derivation':
-            caseList();
+            caseList(0);
             break;
         default :
     }
