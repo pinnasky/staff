@@ -319,7 +319,7 @@
 		        data-unload = "openCase_after"
 		        >
 		        
-		        	<form id="case_save_form" method="post" action="" data-temp-action="{{sFormAction}}" enctype="multipart/form-data" target="case_save_iframe">
+		        	<form id="case_save_form" method="post" action="" enctype="multipart/form-data" target="case_save_iframe">
 		        		<!-- <input name="form[xxx][rdxx]" checked="" id="form[xxx][rdxx]" class="toggle" type="checkbox"><label for="form[xxx][rdxx]" data-on="Yes" data-off="No"><span></span></label> -->
 
 		        		<div compile="sFormContent" style="margin-top: 15px;"></div>
@@ -346,7 +346,8 @@
 			    </div><!-- /.modal-content -->
 			  </div><!-- /.modal-dialog -->
 			</div><!-- /.modal -->
-		    
+				<!-- after submit/save/derivate a form, will have a response from server side, this will record the post type -->
+		    <input id="form_post_type" name="form_post_type" type="hidden" value="" />
         </div><!--afui end-->
 		<!--<script data-main="js/main.js" src="js/require.js"></script>-->
 		<script type="text/javascript" charset="utf-8" src="js/appframework.js"></script>
