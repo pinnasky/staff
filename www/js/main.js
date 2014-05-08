@@ -252,11 +252,11 @@ function loadedLogin(what) {
     
 }
 
-function caseList(needInit = 1){
+function caseList(needInit){
     $.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
     
-    if(needInit)    userInfo();
+    if(needInit != 0)    userInfo();
     $.ajax({
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=caseList',
