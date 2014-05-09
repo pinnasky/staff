@@ -237,6 +237,7 @@ function verifyLogin(){
 function loadedLogin(what) {
     $.ui.handheldMinWidth = 9999;
     $.ui.disableSideMenu();
+    $("#txtName").focus();
     if($("#hdnSID").val()){
         if(what.id == 'login'){
             $("#hdnSID").val("");
@@ -299,6 +300,7 @@ function openCase(obj){
                 scopeRunCase.sAppUid = res.APP_UID;
                 scopeRunCase.iDelIndex = res.DEL_INDEX;
                 scopeRunCase.iPosition = res.POSITION;
+                scopeRunCase.sProUid = res.PRO_UID;
                 //assign value
                 for( key in res.FORM_VARS){
                     eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
@@ -368,6 +370,7 @@ function submitOK(res){
         scopeSubmitOk.sAppUid = res.APP_UID;
         scopeSubmitOk.iDelIndex = res.DEL_INDEX;
         scopeSubmitOk.iPosition = res.POSITION;
+        scopeSubmitOk.sProUid = res.PRO_UID;
         //assign value
         for( key in res.FORM_VARS){
             eval('scopeSubmitOk.'+key+'="'+res.FORM_VARS[key]+'"');

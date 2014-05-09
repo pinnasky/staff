@@ -718,10 +718,10 @@ fieldset[disabled] .ED-EDM-btn-danger.active {
   top: -2px;
   left: 0px;
   position: absolute;
-  transition: transform 100ms linear;
+  transition: transform 10ms linear;
   transform: translate3d(0, 0, 0);
   -webkit-transform: translate3d(0, 0, 0);
-  -webkit-transition: -webkit-transform 100ms linear;
+  -webkit-transition: -webkit-transform 10ms linear;
 }
 #case_save_form input.toggle:checked + label > span {
   transform: translate3d(37px, 0, 0);

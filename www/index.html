@@ -326,6 +326,7 @@
 		        		<input id="APP_UID" name="APP_UID" type="hidden" value="{{sAppUid}}" />
 		        		<input id="DEL_INDEX" name="DEL_INDEX" type="hidden" value="{{iDelIndex}}" />
 		        		<input id="POSITION" name="POSITION" type="hidden" value="{{iPosition}}" />
+		        		<input id="PRO_UID" name="PRO_UID" type="hidden" value="{{sProUid}}" />
 		        		<iframe id="case_save_iframe" name="case_save_iframe" src="#" style="width: 0; height: 0; border: 0px solid #fff;"></iframe>
 		        	</form>
 		        	<!--<div ng-bind-html="trustHtml(sFormContent)" style="margin-top: 15px;"></div>-->
@@ -359,9 +360,16 @@
 		<script type="text/javascript" charset="utf-8" src="js/angular.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/angular-sanitize.min.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/controllers.js"></script>
-		<script type="text/javascript" charset="utf-8" src="js/af.desktopBrowsers.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/main.js"></script>
 		
 		<script src="view/ui/ui-bootstrap-tpls-0.10.0.js"></script>
+		<script type="text/javascript">
+			if (!((window.DocumentTouch && document instanceof DocumentTouch) || 'ontouchstart' in window)) {
+                var script = document.createElement("script");
+                script.src = "js/af.desktopBrowsers.js";
+                var tag = $("head").append(script);
+                //$.os.desktop=true;
+            }
+		</script>
     </body>
 </html>
