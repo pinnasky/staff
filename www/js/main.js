@@ -120,7 +120,7 @@ function onDeviceReady() {
     $.ui.autoLaunch = false;
     $.ui.openLinksNewTab = false;
     $(document).ready(function(){
-    	$.ui.launch();//portrait landscape
+        $.ui.launch();//portrait landscape
     });
 }
 
@@ -178,6 +178,167 @@ logRatingColor,
 logNeedUpgrade = 0,
 logUserRole
 ;
+/************************ Handel Form Events ***********************************/
+function openCase(obj){
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+    var sAppNumber = obj.getAttribute('data-app_number');
+    var sAppTitle = obj.getAttribute('data-app_title');
+    var sAppUid = obj.getAttribute('data-app_uid');
+    var iDelIndex = obj.getAttribute('data-del_index');
+    $.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=openCase',
+        data: {w:logWs,u:logUsrUid,APP_UID:sAppUid,DEL_INDEX:iDelIndex},
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+            $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action='+res.FORM_ACTION);
+            scopeRunCase = angular.element($('#openCase')).scope();
+            scopeRunCase.$apply(function() {
+                scopeRunCase.sFormContent = res.DYNAFORM;
+                scopeRunCase.sAppUid = res.APP_UID;
+                scopeRunCase.iDelIndex = res.DEL_INDEX;
+                scopeRunCase.iPosition = res.POSITION;
+                scopeRunCase.sProUid = res.PRO_UID;
+                if(res.PREVIOUS_STEP){
+                    scopeRunCase.sPreviousStep = '';
+                    scopeRunCase.sPreviousStepUrl = res.PREVIOUS_STEP;
+                }
+                else{
+                    scopeRunCase.sPreviousStep = 'none';
+                    scopeRunCase.sPreviousStepUrl = '';
+                }
+                //assign value
+                for( key in res.FORM_VARS){
+                    eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
+                }
+                $.ui.showModal("#openCase","fade");
+                $.ui.scrollToTop('openCase');
+                $('#modalHeader > header > h1').attr('style','overflow:visible;');
+                $('#modalHeader > header > h1').html('<span style="font-size:14px;">Case #: '+sAppNumber + '&nbsp;&nbsp;&nbsp;' + sAppTitle + '</span>');
+                $.query(".afui_panel_mask").remove();
+            });
+            evalJs(res.FORM_JS);
+        },
+        error:function(){
+            $.query(".afui_panel_mask").remove();
+        }
+    });
+}
+
+function openCase_before(){
+}
+function openCase_after(){
+    //clear form content
+    scopeRunCase = angular.element($('#openCase')).scope();
+    scopeRunCase.$apply(function() {
+        scopeRunCase.sFormContent = '';
+    });
+    //business function after close form modal
+    var sPostType = $('#form_post_type').val();
+    switch (sPostType){
+        case 'save':
+            caseList(0);
+            break;
+        case 'derivation':
+            caseList(0);
+            break;
+        default :
+    }
+    $.query('#form[btnSave]').removeClass('disabled');
+    $.query('#form[btnSubmit]').removeClass('disabled');
+    $.query('#btnContinue').removeClass('disabled');
+    $('#modalHeader > header > a').attr('style','');
+}
+
+function submitForm(){
+    document.getElementById("case_save_form").submit();
+    $.query('#form[btnSave]').addClass('disabled');
+    $.query('#form[btnSubmit]').addClass('disabled');
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+}
+
+function submitOK(res){
+    var modal = $.query('#modalContainer > div')[0];
+    modal.setAttribute('style','transform:matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);-webkit-transform:matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)');
+    $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action='+res.FORM_ACTION);
+    scopeSubmitOk = angular.element($('#openCase')).scope();
+    scopeSubmitOk.$apply(function() {
+        scopeSubmitOk.sFormContent = res.DYNAFORM;
+        scopeSubmitOk.sAppUid = res.APP_UID;
+        scopeSubmitOk.iDelIndex = res.DEL_INDEX;
+        scopeSubmitOk.iPosition = res.POSITION;
+        scopeSubmitOk.sProUid = res.PRO_UID;
+        if(res.PREVIOUS_STEP){
+            scopeSubmitOk.sPreviousStep = '';
+            scopeSubmitOk.sPreviousStepUrl = res.PREVIOUS_STEP;
+        }
+        else{
+            scopeSubmitOk.sPreviousStep = 'none';
+            scopeSubmitOk.sPreviousStepUrl = '';
+        }
+        //assign value
+        for( key in res.FORM_VARS){
+            eval('scopeSubmitOk.'+key+'="'+res.FORM_VARS[key]+'"');
+        }
+        $('#modalHeader > header > h1').attr('style','overflow:visible;');
+        $.query(".afui_panel_mask").remove();
+    });
+    evalJs(res.FORM_JS);
+}
+
+function derivateForm(){
+    document.getElementById("case_save_form").submit();
+    $.query('#btnContinue').addClass('disabled');
+    $('#modalHeader > header > a').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');
+    $.query('#btnContinue').val('Processing ...');
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+}
+
+function derivateOK(res){
+    $.ui.hideModal("#openCase","fade");
+    $.ui.hideMask();
+}
+
+function saveForm(){
+    var sAction = $('#case_save_form').attr('action');
+    $('#case_save_form').attr('action',sAction+'&_AUTOSAVING_=1');
+    
+    document.getElementById("case_save_form").submit();
+    $.ui.showMask('Saving Data...');
+    $.query('#form[btnSave]').addClass('disabled');
+    $.query('#form[btnSubmit]').addClass('disabled');
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+}
+
+function saveOK(res){
+    $.ui.hideModal("#openCase","fade");
+    $.ui.hideMask();
+}
+
+function previousStep(){
+    var sAction = $('#PREVIOUS_STEP').val();
+    $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action='+sAction);
+    document.getElementById("case_save_form").submit();
+}
+
+/*******************************Business Logic************************************/
+/**
+ * show messages for comments history on touch devices
+ * @param  {[type]} msg [description]
+ * @return {[type]}     [description]
+ */
+function showMsg(msg){
+    $('#modal-dialog-body').html(msg);
+    $('#modal-dialog').show();
+}
+function hideMsg(){
+    $('#modal-dialog').hide();
+}
 
 function verifyLogin(){
     $.query("#afui").append('<div class="afui_panel_mask"></div>');
@@ -212,12 +373,12 @@ function verifyLogin(){
                     localStorage.setItem("password", $("#txtPwd").val());
                     localStorage.setItem("login_rem", true);
                 }else{
-                	localStorage.setItem("username", '');
+                    localStorage.setItem("username", '');
                     localStorage.setItem("password", '');
                     localStorage.setItem("login_rem", false);
                 }
             }else{
-            	$.ui.disableSideMenu();
+                $.ui.disableSideMenu();
                 if(data.m)
                     $.ui.showMask(data.m);
                 else
@@ -279,139 +440,6 @@ function caseList(needInit){
     });
 }
 
-function openCase(obj){
-	$.query("#afui").append('<div class="afui_panel_mask"></div>');
-    $.query(".afui_panel_mask").show();
-    var sAppNumber = obj.getAttribute('data-app_number');
-    var sAppTitle = obj.getAttribute('data-app_title');
-    var sAppUid = obj.getAttribute('data-app_uid');
-    var iDelIndex = obj.getAttribute('data-del_index');
-	$.ajax({
-        type: 'post',
-        url: httpUrl+'appDo/ema.php?action=openCase',
-        data: {w:logWs,u:logUsrUid,APP_UID:sAppUid,DEL_INDEX:iDelIndex},
-        dataType: 'json',
-        timeout:5000,
-        success: function (res) {
-            $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action='+res.FORM_ACTION);
-            scopeRunCase = angular.element($('#openCase')).scope();
-		    scopeRunCase.$apply(function() {
-		        scopeRunCase.sFormContent = res.DYNAFORM;
-                scopeRunCase.sAppUid = res.APP_UID;
-                scopeRunCase.iDelIndex = res.DEL_INDEX;
-                scopeRunCase.iPosition = res.POSITION;
-                scopeRunCase.sProUid = res.PRO_UID;
-                //assign value
-                for( key in res.FORM_VARS){
-                    eval('scopeRunCase.'+key+'="'+res.FORM_VARS[key]+'"');
-                }
-                $.ui.showModal("#openCase","fade");
-                $.ui.scrollToTop('openCase');
-                $('#modalHeader > header > h1').attr('style','overflow:visible;');
-                $('#modalHeader > header > h1').html('<span style="font-size:14px;">Case #: '+sAppNumber + '&nbsp;&nbsp;&nbsp;' + sAppTitle + '</span>');
-                $.query(".afui_panel_mask").remove();
-            });
-            evalJs(res.FORM_JS);
-        },
-        error:function(){
-            $.query(".afui_panel_mask").remove();
-        }
-    });
-}
-
-function openCase_before(){
-}
-function openCase_after(){
-    //clear form content
-    scopeRunCase = angular.element($('#openCase')).scope();
-    scopeRunCase.$apply(function() {
-        scopeRunCase.sFormContent = '';
-    });
-    //business function after close form modal
-    var sPostType = $('#form_post_type').val();
-    switch (sPostType){
-        case 'save':
-            caseList(0);
-            break;
-        case 'derivation':
-            caseList(0);
-            break;
-        default :
-    }
-    $.query('#form[btnSave]').removeClass('disabled');
-    $.query('#form[btnSubmit]').removeClass('disabled');
-    $.query('#btnContinue').removeClass('disabled');
-    $('#modalHeader > header > a').attr('style','');
-}
-
-function showMsg(msg){
-    $('#modal-dialog-body').html(msg);
-    $('#modal-dialog').show();
-}
-function hideMsg(){
-    $('#modal-dialog').hide();
-}
-
-function submitForm(){
-    document.getElementById("case_save_form").submit();
-    $.query('#form[btnSave]').addClass('disabled');
-    $.query('#form[btnSubmit]').addClass('disabled');
-    $.query("#afui").append('<div class="afui_panel_mask"></div>');
-    $.query(".afui_panel_mask").show();
-}
-
-function submitOK(res){
-    var modal = $.query('#modalContainer > div')[0];
-    modal.setAttribute('style','transform:matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);-webkit-transform:matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)');
-    $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action='+res.FORM_ACTION);
-    scopeSubmitOk = angular.element($('#openCase')).scope();
-    scopeSubmitOk.$apply(function() {
-        scopeSubmitOk.sFormContent = res.DYNAFORM;
-        scopeSubmitOk.sAppUid = res.APP_UID;
-        scopeSubmitOk.iDelIndex = res.DEL_INDEX;
-        scopeSubmitOk.iPosition = res.POSITION;
-        scopeSubmitOk.sProUid = res.PRO_UID;
-        //assign value
-        for( key in res.FORM_VARS){
-            eval('scopeSubmitOk.'+key+'="'+res.FORM_VARS[key]+'"');
-        }
-        $('#modalHeader > header > h1').attr('style','overflow:visible;');
-        $.query(".afui_panel_mask").remove();
-    });
-    evalJs(res.FORM_JS);
-}
-
-function derivateForm(){
-    document.getElementById("case_save_form").submit();
-    $.query('#btnContinue').addClass('disabled');
-    $('#modalHeader > header > a').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');
-    $.query('#btnContinue').val('Processing ...');
-    $.query("#afui").append('<div class="afui_panel_mask"></div>');
-    $.query(".afui_panel_mask").show();
-}
-
-function derivateOK(res){
-    $.ui.hideModal("#openCase","fade");
-    $.ui.hideMask();
-}
-
-function saveForm(){
-    var sAction = $('#case_save_form').attr('action');
-    $('#case_save_form').attr('action',sAction+'&_AUTOSAVING_=1');
-    
-    document.getElementById("case_save_form").submit();
-    $.ui.showMask('Saving Data...');
-    $.query('#form[btnSave]').addClass('disabled');
-    $.query('#form[btnSubmit]').addClass('disabled');
-    $.query("#afui").append('<div class="afui_panel_mask"></div>');
-    $.query(".afui_panel_mask").show();
-}
-
-function saveOK(res){
-    $.ui.hideModal("#openCase","fade");
-    $.ui.hideMask();
-}
-
 function menuList(){
     $.ajax({
         type: 'post',
@@ -437,20 +465,20 @@ function userList(obj){
     segmentInfo();
     currentRole();
     if(logIsAudit == 1){
-    	$("#userListSearch").val('');//clear search area
-    	$("#userListSearch").trigger('change');//trigger angular filter to reload data after clear the search area
-    	document.getElementById('userListSearch').blur();
-    	userListAjax(obj);
+        $("#userListSearch").val('');//clear search area
+        $("#userListSearch").trigger('change');//trigger angular filter to reload data after clear the search area
+        document.getElementById('userListSearch').blur();
+        userListAjax(obj);
     }else{
-    	userTags();
+        userTags();
     }
 }
 
 function userListAjax(obj){
-	//load user list
-	$.query("#afui").append('<div class="afui_panel_mask"></div>');
+    //load user list
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
-	$.ajax({
+    $.ajax({
         type: 'post',
         url: httpUrl+'appDo/ema.php?action=userList',
         data: {w:logWs,u:logUsrUid,SCH_ID:logSchId,WY_CATEGORY:logWyCat,SCH_YEAR:logSchYear},
@@ -474,8 +502,8 @@ function userListAjax(obj){
 }
 
 function userTags(){
-	//load tag list for one user
-	$.query("#afui").append('<div class="afui_panel_mask"></div>');
+    //load tag list for one user
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
     $.ajax({
         type: 'post',
@@ -560,8 +588,8 @@ function tagList(obj){
 }
 
 function tagListAjax(sUsrUid,iSchId){
-	//load tag list for one user
-	$.query("#afui").append('<div class="afui_panel_mask"></div>');
+    //load tag list for one user
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
     $.ajax({
         type: 'post',
@@ -728,9 +756,9 @@ function showCaseInfo(result,sFormInfo,sTag,iHaveUpgrade,sUsrUid,sWyUid,sOperato
     if(aTag[2] == 0)
         formNameStyle = 'text-decoration: line-through;color: red;';
     if(logIsAudit == 1)
-    	backBtn = 'tagListAjax(\''+sUsrUid+'\',\''+logSchId+'\');';
+        backBtn = 'tagListAjax(\''+sUsrUid+'\',\''+logSchId+'\');';
     else
-    	backBtn = 'userTags();';
+        backBtn = 'userTags();';
     var header = '<div class="ED-EDM-panel-heading">'+
                     '   <a style="color: #53575E;height:34px;" id="backButton" onclick="'+backBtn+'" class="button">Back</a>'+
                     '   <div align="center" style="'+formNameStyle+'">'+
@@ -827,5 +855,5 @@ function showCaseInfo(result,sFormInfo,sTag,iHaveUpgrade,sUsrUid,sWyUid,sOperato
     });
 }
 function changeEvaluator(obj, usrUid, createdDate, wyUid, haveUpgrade, evaUid, tag){
-	
+    
 }

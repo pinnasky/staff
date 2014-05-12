@@ -327,6 +327,7 @@
 		        		<input id="DEL_INDEX" name="DEL_INDEX" type="hidden" value="{{iDelIndex}}" />
 		        		<input id="POSITION" name="POSITION" type="hidden" value="{{iPosition}}" />
 		        		<input id="PRO_UID" name="PRO_UID" type="hidden" value="{{sProUid}}" />
+		        		<input id="PREVIOUS_STEP" name="PREVIOUS_STEP" type="hidden" value="{{sPreviousStepUrl}}" />
 		        		<iframe id="case_save_iframe" name="case_save_iframe" src="#" style="width: 0; height: 0; border: 0px solid #fff;"></iframe>
 		        	</form>
 		        	<!--<div ng-bind-html="trustHtml(sFormContent)" style="margin-top: 15px;"></div>-->
@@ -350,13 +351,9 @@
 				<!-- after submit/save/derivate a form, will have a response from server side, this will record the post type -->
 		    <input id="form_post_type" name="form_post_type" type="hidden" value="" />
         </div><!--afui end-->
-		<!--<script data-main="js/main.js" src="js/require.js"></script>-->
 		<script type="text/javascript" charset="utf-8" src="js/appframework.js"></script>
-		<script type="text/javascript" charset="utf-8" src="js/af.css3animate.js"></script>
-		<script type="text/javascript" charset="utf-8" src="js/af.scroller.js"></script>
-		<script type="text/javascript" charset="utf-8" src="js/af.touchEvents.js"></script>
-		<script type="text/javascript" charset="utf-8" src="js/af.touchLayer.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/appframework.ui.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/af.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/angular.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/angular-sanitize.min.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/controllers.js"></script>
