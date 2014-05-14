@@ -249,6 +249,8 @@ function openCase_after(){
     $.query('#form[btnSave]').removeClass('disabled');
     $.query('#form[btnSubmit]').removeClass('disabled');
     $.query('#btnContinue').removeClass('disabled');
+    $.query('#form[DYN_BACKWARD]').removeClass('disabled');
+    $.query('#form[DYN_BACKWARD]').attr('style','');
     $('#modalHeader > header > a').attr('style','');
 }
 
@@ -256,6 +258,9 @@ function submitForm(){
     document.getElementById("case_save_form").submit();
     $.query('#form[btnSave]').addClass('disabled');
     $.query('#form[btnSubmit]').addClass('disabled');
+    $.query('#form[DYN_BACKWARD]').addClass('disabled');
+    $.query('#form[DYN_BACKWARD]').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');
+    $('#modalHeader > header > a').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');//close icon on modal header
     $.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
 }
@@ -285,6 +290,7 @@ function submitOK(res){
         }
         $('#modalHeader > header > h1').attr('style','overflow:visible;');
         $.query(".afui_panel_mask").remove();
+        $('#modalHeader > header > a').attr('style','');
     });
     evalJs(res.FORM_JS);
 }
@@ -292,7 +298,9 @@ function submitOK(res){
 function derivateForm(){
     document.getElementById("case_save_form").submit();
     $.query('#btnContinue').addClass('disabled');
-    $('#modalHeader > header > a').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');
+    $.query('#form[DYN_BACKWARD]').addClass('disabled');
+    $.query('#form[DYN_BACKWARD]').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');
+    $('#modalHeader > header > a').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');//close icon on modal header
     $.query('#btnContinue').val('Processing ...');
     $.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
@@ -311,6 +319,9 @@ function saveForm(){
     $.ui.showMask('Saving Data...');
     $.query('#form[btnSave]').addClass('disabled');
     $.query('#form[btnSubmit]').addClass('disabled');
+    $.query('#form[DYN_BACKWARD]').addClass('disabled');
+    $.query('#form[DYN_BACKWARD]').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');
+    $('#modalHeader > header > a').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');//close icon on modal header
     $.query("#afui").append('<div class="afui_panel_mask"></div>');
     $.query(".afui_panel_mask").show();
 }
@@ -324,6 +335,12 @@ function previousStep(){
     var sAction = $('#PREVIOUS_STEP').val();
     $('#case_save_form').attr('action',httpUrl+'appDo/ema.php?action='+sAction);
     document.getElementById("case_save_form").submit();
+    $.query('#form[btnSave]').addClass('disabled');
+    $.query('#form[btnSubmit]').addClass('disabled');
+    $.query('#form[DYN_BACKWARD]').addClass('disabled');
+    $.query('#form[DYN_BACKWARD]').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');
+    $.query('#btnContinue').addClass('disabled');
+    $('#modalHeader > header > a').attr('style','pointer-events:none;opacity:0.6;cursor:not-allowed;');//close icon on modal header
 }
 
 /*******************************Business Logic************************************/
