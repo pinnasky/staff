@@ -169,6 +169,7 @@ $.ui.ready(function(){
 var logUsrUid,httpUrl = 'http://222.92.80.83:8034/plugin/edManagement/',
 logWs,
 logIsAudit,
+logCurUsrUid,//temp current user which selected by principal
 logSchId,
 logUserTypes,
 logSchYear,
@@ -600,6 +601,7 @@ function currentRole(){
 function tagList(obj){
     var sUsrUid = obj.getAttribute('data-usruid');
     var iSchId = obj.getAttribute('data-schid');
+    logCurUsrUid = sUsrUid;
     //load tag list for one user
     tagListAjax(sUsrUid,iSchId);
 }
@@ -615,6 +617,7 @@ function tagListAjax(sUsrUid,iSchId){
         dataType: 'json',
         timeout:5000,
         success: function (res) {
+            console.log(res);
             res.data[0].RATING_COLORS = eval('logRatingColor.'+res.data[0].RATING+'.RAT_COLOR');
             segments = renderFormTag(res.data[0], logSegment);
             scopeTagList = angular.element($('#tagList')).scope();
@@ -662,10 +665,13 @@ function renderFormTag(oRecord, oSegs) {
             if(formInfo[3]){
                 tags += '<div class="form-tag-div" onclick="caseInfo(this);" '+
                 'data-USR_UID="'+aRecord['USR_UID']+'" '+
+                'data-USR_FIRSTNAME="'+aRecord['USR_FIRSTNAME']+'" '+
+                'data-USR_LASTNAME="'+aRecord['USR_LASTNAME']+'" '+
                 'data-OPERATOR_UID="'+aRecord['OPERATOR_UID']+'" '+
                 'data-IS_NEXTYEAR="'+aRecord['IS_NEXTYEAR']+'" '+
                 'data-RATING="'+aRecord['RATING']+'" '+
                 'data-TAG="'+formTags[j]+'" '+
+                'data-INDEX="'+j+'" '+
                 'data-HAVE_UPGRADE="'+aRecord['HAVE_UPGRADE']+'" '+
                 'data-WY_UID="'+aRecord['WY_UID']+'" '+
                 'data-SEG_NAME="'+dataIndex+'" '+
@@ -689,12 +695,15 @@ function caseInfo(obj){
     var sUsrUid = obj.getAttribute('data-USR_UID');
     var iHaveUpgrade = obj.getAttribute('data-HAVE_UPGRADE');
     var sTag = obj.getAttribute('data-TAG');
+    var iIndex = obj.getAttribute('data-INDEX');
     var sWyUid = obj.getAttribute('data-WY_UID');
     var sSegName = obj.getAttribute('data-SEG_NAME');
     var sOperatorUid = obj.getAttribute('data-OPERATOR_UID');
     var sRating = obj.getAttribute('data-RATING');
     var isNextYear = obj.getAttribute('data-IS_NEXTYEAR');
     var sFormInfo = obj.getAttribute('data-FORM_INFO');
+    var sFirstName = obj.getAttribute('data-USR_FIRSTNAME');
+    var sLastName = obj.getAttribute('data-USR_LASTNAME');
     
     var cantStart = (sSegName != 'TNI' &&  sSegName != 'TUS') ? (sRating == 'U' || (sRating == 'N' && isNextYear == 1) ? 1 : 0) :0;
     if(logWyCat == 'OT_PRINCIPAL' && logUserRole == 'EDMGR_SUPER_ASSISTANT' && logUsrUid != sOperatorUid)//v1.9.4 for super assistant in principal menu
@@ -718,6 +727,12 @@ function caseInfo(obj){
         timeout:5000,
         success: function (res) {
             showCaseInfo(res,sFormInfo,sTag,iHaveUpgrade,sUsrUid,sWyUid,sOperatorUid);
+            if($.query('#startCase').length > 0){
+                $.query('#startCase').unbind('click').bind('click',function(){
+                    startCase(res,sUsrUid,sTag,sWyUid,iIndex,sFirstName,sLastName);
+                });
+                
+            }
             $.query(".afui_panel_mask").remove();
         },
         error:function(){
@@ -727,6 +742,7 @@ function caseInfo(obj){
     
     
 }
+
 
 function showCaseInfo(result,sFormInfo,sTag,iHaveUpgrade,sUsrUid,sWyUid,sOperatorUid){
     //build form name
@@ -769,7 +785,7 @@ function showCaseInfo(result,sFormInfo,sTag,iHaveUpgrade,sUsrUid,sWyUid,sOperato
     if(aTag[1] == 1)
         extraMark = "<span style='color:blue;font-style:italic;'>(Extra Form)</span> ";
     if(result.CASE_INFO.STATUS == 'TODO' && result.CASE_INFO.CAN_START == 1)
-        startCase = '<button class="ED-EDM-btn ED-EDM-btn-primary ED-EDM-btn-xs">Start Case</button>';
+        startCase = '<button id="startCase" class="ED-EDM-btn ED-EDM-btn-primary ED-EDM-btn-xs">Start Case</button>';
     if(aTag[2] == 0)
         formNameStyle = 'text-decoration: line-through;color: red;';
     if(logIsAudit == 1)
@@ -873,4 +889,121 @@ function showCaseInfo(result,sFormInfo,sTag,iHaveUpgrade,sUsrUid,sWyUid,sOperato
 }
 function changeEvaluator(obj, usrUid, createdDate, wyUid, haveUpgrade, evaUid, tag){
     
+}
+
+function startCase(result,sUsrUid,sTag,sWyUid,iIndex,sFirstName,sLastName){
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+    
+    $.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=assignCase',
+        data: {
+            w:logWs,
+            u:logUsrUid,
+            USR_UID:sUsrUid,
+            CREATED_DATE: result.CASE_INFO.CREATED_DATE,
+            TAG : sTag,
+            TYPE: logWyCat,
+            WY_UID:sWyUid,
+            SCH_YEAR:result.CASE_INFO.SCH_YEAR,
+            SCH_ID: logSchId,
+            INDEX:iIndex,
+            FORM_NAME: result.CASE_INFO.FORM_NAME,
+            NEED_UPGRADE : logNeedUpgrade
+        },
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+            $.query(".afui_panel_mask").remove();
+            $.query('#backButton').click();
+        },
+        error:function(){
+            $.query(".afui_panel_mask").remove();
+            $.query('#backButton').click();
+        }
+    });
+}
+
+function extraForm(){
+    $.query("#afui").append('<div class="afui_panel_mask"></div>');
+    $.query(".afui_panel_mask").show();
+    var backBtn = '';
+    $.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=extra_Form',
+        data: {w:logWs,u:logUsrUid,WY_CATEGORY:logWyCat},
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+            if(logIsAudit == 1)
+                backBtn = "$.ui.loadContent('tagList',false,true,'flip');";
+            else
+                backBtn = "$.ui.loadContent('userTags',false,true,'flip');";
+            scope = angular.element($('#extraForm')).scope();
+            scope.$apply(function() {
+                scope.formTargets = res.FORM_TARGET;
+                scope.sems = res.SEMESTER;
+                scope.segs = res.SEGMENT;
+            });
+            $.ui.loadContent('extraForm',false,true,'flip');
+            $.ui.scrollToTop('extraForm');
+            $.query('#extraForm_back_btn').html('<a id="backButton" onclick="'+backBtn+'" class="button">Back</a>');
+            $.query(".afui_panel_mask").remove();
+        },
+        error:function(){
+            $.query(".afui_panel_mask").remove();
+        }
+    });
+}
+
+function saveExtraForm(){
+    var oFormTarget = getRadioChecked('formtarget');
+    if(!oFormTarget){
+        alert('Please choose one form');
+        return false;
+    }
+    var oSem = getRadioChecked('sem');
+    if(!oSem){
+        alert('Please choose one semester');
+        return false;
+    }
+    var oSeg = getRadioChecked('seg');
+    if(!oSeg){
+        alert('Please choose one segment');
+        return false;
+    }
+
+    $.ajax({
+        type: 'post',
+        url: httpUrl+'appDo/ema.php?action=saveExtra_Form',
+        data: {
+            w:logWs,
+            u:logUsrUid,
+            FORM_TAG : oFormTarget.value,
+            HAVE_UPGRADE : '',//TODO
+            SCH_ID : logSchId ,
+            SCH_YEAR : logSchYear,
+            SEGMENT_UID : oSeg.value,
+            SEMESTER_UID : oSem.value,
+            TYPE : logWyCat,
+            USR_UID : logCurUsrUid
+        },
+        dataType: 'json',
+        timeout:5000,
+        success: function (res) {
+        
+        },
+        error:function(){
+        }
+
+    });
+}
+
+function getRadioChecked(radio){
+    var oRadios = document.getElementsByName(radio);
+    for (var i = 0; i < oRadios.length; i++) {
+        if(oRadios[i].checked)
+         return oRadios[i];
+    };
 }

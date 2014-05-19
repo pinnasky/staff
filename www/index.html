@@ -273,6 +273,7 @@
 					<div style="font-weight: bold;float: left;"><span>Rating: </span><span style="color: #{{tags.RATING_COLORS}};">{{tags.STAFF_RATING}}</span></div>
 					<div style="font-weight: bold;float: right;" ng-show="tags.OPERATOR_NAME"><span>Operator: </span><span>{{tags.OPERATOR_NAME}}</span></div>
 					<br /><br />
+					<button class="btn btn-primary btn-sm" onclick="extraForm()"><span class="glyphicon glyphicon-plus-sign"></span> Extra</button><br><br>
 					<table class="ema-table ema-table-bordered ema-table-condensed"></tr>
 						<tbody style="font-weight: bold;">
 							<tr ng-repeat="seg in segments">
@@ -296,20 +297,74 @@
 		        data-nav = "caselist_side" >
 		        	<div ng-bind-html="trustHtml(caseInfo)"></div>
 		        </div>
+
+		        <!-- add extra form -->
+		        <div id="extraForm" 
+		        class="panel" 
+		        data-header = "extraForm_header" 
+		        data-footer = "none" 
+		        data-nav = "caselist_side" >
+		        	<div class="container-fluid">
+			        	<div class="col-xs-12">
+			        		<div class="col-xs-3 text-right" style="margin-top:12px;">
+			        			<label>Form Target:</label>
+			        		</div>
+			        		<div class="col-xs-9">
+			        			<div class="radio" ng-repeat="formtarget in formTargets">
+										  <label>
+										    <input type="radio" name="formtarget" id="formtarget{{$index}}" value="{{formtarget.FORM_TAG}}">
+										    <span>{{formtarget.FORM_TAG}}</span> <span class="text-muted small">{{formtarget.FORM_NAME}}</span>
+										  </label>
+										</div>
+			        		</div>
+			        	</div>
+			        	<div class="col-xs-12">
+			        		<div class="col-xs-3 text-right" style="margin-top:12px;">
+			        			<label>Semester:</label>
+			        		</div>
+			        		<div class="col-xs-9">
+			        			<div class="radio" ng-repeat="sem in sems">
+										  <label>
+										    <input type="radio" name="sem" id="sem{{$index}}" value="{{sem.SEG_SEM_UID}}" ng-checked="$index == 0">
+										    <span>{{sem.SEG_SEM_NAME}}</span>
+										  </label>
+										</div>
+			        		</div>
+			        	</div>
+			        	<div class="col-xs-12">
+			        		<div class="col-xs-3 text-right" style="margin-top:12px;">
+			        			<label>Segment:</label>
+			        		</div>
+			        		<div class="col-xs-9">
+			        			<div class="radio" ng-repeat="seg in segs">
+										  <label>
+										    <input type="radio" name="seg" id="seg{{$index}}" value="{{seg.SEG_SEM_UID}}">
+										    <span>{{seg.SEG_SEM_NAME}}</span>
+										  </label>
+										</div>
+			        		</div>
+			        	</div>
+			        	<div class="clearfix col-xs-12" style="margin-top: 20px;"><hr></div>
+			        	<div class="col-xs-12">
+			        		<div class="col-xs-6">
+			        			<button class="btn btn-primary col-xs-7 pull-right" onclick="saveExtraForm();">Save</button>
+			        		</div>
+			        		<div class="col-xs-6">
+			        			<button class="btn btn-danger col-xs-7" onclick="$.query('#extraForm_back_btn > a').click();">Cancel</button>
+			        		</div>
+			        	</div>
+			        	<div class="col-xs-12" style="margin-top:50px;"></div>
+			        </div>
+
+		        	</div>
+		        <header id="extraForm_header" style="text-align: center;">
+		        	<span id="extraForm_back_btn"></span>
+              <h1 id="extraForm_pageTitle" class="">Add Extra Form</h1>
+		        	<a onclick='$.ui.toggleSideMenu();' class='menuButton'></a>
+		        </header>
 		        
 		        <!-- Evaluator List-->
 		        
-		        <!-- Running Case -->
-		        <div id="runCase" class="panel"
-		        data-title = ""
-		        data-footer = "none"
-		        data-load = "loadCase_before"
-		        data-unload = "loadCase_after"
-		        >
-		        	<div ng-include="runCase_formUrl" style="margin-top: 15px;">
-		        		This will replaced by specific form
-		        	</div>
-		        </div>
 		        
 		        <!-- open case -->
 		        <div id="openCase" class="panel"
@@ -320,7 +375,6 @@
 		        >
 		        
 		        	<form id="case_save_form" method="post" action="" enctype="multipart/form-data" target="case_save_iframe">
-		        		<!-- <input name="form[xxx][rdxx]" checked="" id="form[xxx][rdxx]" class="toggle" type="checkbox"><label for="form[xxx][rdxx]" data-on="Yes" data-off="No"><span></span></label> -->
 
 		        		<div compile="sFormContent" style="margin-top: 15px;"></div>
 		        		<input id="APP_UID" name="APP_UID" type="hidden" value="{{sAppUid}}" />
